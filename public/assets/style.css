@@ -370,3 +370,19 @@ a.card:hover { transform: translateY(-3px); background: var(--bg-3); }
 
 /* Дата обновления в конце страницы, перед футером */
 .meta-line.updated { margin: 32px 0 0; padding-top: 16px; border-top: 1px solid var(--bg-3); }
+
+/* Больше воздуха между блоками */
+.content > section { margin-top: 72px; }
+.content > section:first-child { margin-top: 0; }
+.content > section > h2 { margin-top: 0; margin-bottom: 18px; }
+.content h3 { margin-top: 32px; margin-bottom: 12px; }
+.content p { margin-bottom: 1.15em; }
+.content .table-wrap, .content .cards, .content .howto, .content .games, .content .top-games,
+.content .phones, .content .chips, .content .steps { margin-top: 24px; margin-bottom: 28px; }
+.content .note { margin-top: 24px; margin-bottom: 24px; }
+.content .cta-box { margin-top: 36px; margin-bottom: 36px; }
+.content .faq details { margin-bottom: 10px; }
+.content > section > :last-child { margin-bottom: 0; }
+@media (max-width: 700px) {
+  .content > section { margin-top: 56px; }
+}
