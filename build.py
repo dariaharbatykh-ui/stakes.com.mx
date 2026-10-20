@@ -66,6 +66,31 @@ SIDE_MAIN = [
     ("/codigo-promocional/", "Código promocional", "ticket"),
     ("/metodos-de-pago/", "Depósitos y retiros", "card"),
 ]
+# Страницы по играм и видам спорта (в меню попадают только существующие страницы)
+SIDE_GAMES = [
+    ("/originales-de-stake/", "Originales de Stake", "star"),
+    ("/slots/", "Slots", "dice"),
+    ("/casino-en-vivo/", "Casino en vivo", "tv"),
+    ("/blackjack/", "Blackjack", "dice"),
+]
+SIDE_SPORTS = [
+    ("/apuestas-futbol/", "Fútbol", "ball"),
+    ("/apuestas-tenis/", "Tenis", "ball"),
+    ("/apuestas-cricket/", "Críquet", "ball"),
+    ("/apuestas-hockey/", "Hockey sobre hielo", "ball"),
+    ("/apuestas-esports/", "eSports", "tv"),
+]
+
+
+def existing(items):
+    out = []
+    for item in items:
+        slug = item[0].strip("/")
+        if (SRC / "pages" / f"{slug}.html").exists():
+            out.append(item)
+    return out
+
+
 SIDE_HELP = [
     ("/juego-responsable/", "Juego responsable", "shield"),
     ("/sobre-nosotros/", "Sobre nosotros", "info"),
@@ -252,7 +277,17 @@ ICON_RULES = [
     ("lock", ("caja fuerte", "2fa", "autenticacion")),
     ("card", ("deposit", "retir", "pago", "spei", "limite", "ganancias")),
     ("user", ("registr", "requisito", "verific", "cuenta", "documento")),
-    ("ball", ("apuesta", "deport", "retirarse", "sportsbook")),
+    ("shield", ("provably", "se revisa")),
+    ("mail", ("escribenos", "contacto")),
+    ("info", ("quienes somos", "financia", "condiciones")),
+    ("heart", ("herramientas",)),
+    ("tv", ("mapas", "series", "bo3")),
+    ("ball", ("abandona", "carreras", "wickets", "nhl", "tiempo reglamentario")),
+    ("dice", ("blackjack", "pedir", "plantarse", "como se juega", "cada mesa")),
+    ("star", ("rtp", "volatilidad", "reglas", "como funciona")),
+    ("tv", ("esports", "counter strike", "league of legends", "dota", "valorant", "efutbol")),
+    ("ball", ("apuesta", "apostar", "deport", "retirarse", "sportsbook", "tenis", "futbol", "criquet", "cricket",
+              "hockey", "torneo", "grand slam", "liga", "partido", "mercado", "momio", "cuota", "liquid", "abandono")),
     ("dice", ("casino", "slots", "tragamonedas", "original", "juego", "poker", "proveedor", "mines", "plinko", "burst")),
     ("heart", ("responsable", "consejos", "ayuda", "menores", "pausa")),
     ("shield", ("segur", "legal", "licencia", "justo", "confiable")),
@@ -401,6 +436,13 @@ LOGO = (f'<a class="logo" href="/" aria-label="{SITE_NAME} inicio">'
         f'<span class="logo-mark" aria-hidden="true">S</span><span class="logo-txt">Stakes<small>.com.mx</small></span></a>')
 
 
+def side_section(title, items, current):
+    if not items:
+        return ""
+    return (f'<nav class="side-group" aria-label="{title}"><p class="side-title">{title}</p>'
+            f'<ul>{side_links(items, current)}</ul></nav>')
+
+
 def sidebar(current):
     def tile(href, label, cls, ico):
         cur = ' aria-current="page"' if href == current else ""
@@ -409,6 +451,8 @@ def sidebar(current):
   <div class="side-head">{LOGO}<button class="side-close" type="button" aria-label="Cerrar menú" data-close-menu>{icon("close")}</button></div>
   <div class="side-tiles">{tile("/casino/", "Casino", "tile-casino", "dice")}{tile("/apuestas-deportivas/", "Deportes", "tile-sports", "ball")}</div>
   <nav class="side-group" aria-label="Guías"><ul>{side_links(SIDE_MAIN, current)}</ul></nav>
+  {side_section("Casino", existing(SIDE_GAMES), current)}
+  {side_section("Deportes", existing(SIDE_SPORTS), current)}
   <nav class="side-group" aria-label="Ayuda"><ul>{side_links(SIDE_HELP, current)}</ul></nav>
   <p class="side-note"><span class="badge-18">18+</span> Juega con responsabilidad</p>
 </aside>
@@ -460,6 +504,12 @@ def social_html():
     return f'<nav class="social" aria-label="Redes sociales de Stake México"><ul>{items}</ul></nav>'
 
 
+def footer_col(title, items):
+    if not items:
+        return ""
+    return f'<div><h2>{title}</h2><ul>{links(items)}</ul></div>'
+
+
 def footer():
     return f'''<footer class="site-footer">
   <div class="wrap">
@@ -470,6 +520,7 @@ def footer():
         <div class="badges"><span class="badge">18+</span><span class="badge">Juego responsable</span></div>
       </div>
       <div><h2>Guías</h2><ul>{links(FOOTER_GUIDES)}</ul></div>
+      {footer_col("Casino y deportes", [(h, t) for h, t, _ in existing(SIDE_GAMES) + existing(SIDE_SPORTS)])}
       <div><h2>Sitio</h2><ul>{links(FOOTER_SITE)}</ul></div>
       <div><h2>Legal</h2><ul>{links(FOOTER_LEGAL)}</ul></div>
     </div>

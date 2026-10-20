@@ -63,4 +63,14 @@ npm run deploy
 ## Страницы
 
 Коммерческие: `/`, `/registro/`, `/iniciar-sesion/`, `/app/`, `/bono-de-bienvenida/`, `/codigo-promocional/`, `/metodos-de-pago/`, `/casino/`, `/apuestas-deportivas/`.
+Игры: `/originales-de-stake/`, `/slots/`, `/casino-en-vivo/`, `/blackjack/`.
+Спорт: `/apuestas-futbol/`, `/apuestas-tenis/`, `/apuestas-cricket/`, `/apuestas-hockey/`, `/apuestas-esports/`.
 Служебные: `/sobre-nosotros/`, `/contacto/`, `/juego-responsable/`, `/aviso-de-privacidad/`, `/politica-de-cookies/`, `/terminos-y-condiciones/`, `/descargo-de-responsabilidad/`, `404.html`.
+
+## Новые страницы и данные
+
+- `research/stake-mx-2026-10-20/` — данные со stake.mx на 20.10.2026 (описания разделов, списки игр, лиги, правила ставок по видам спорта, адреса обложек). Это источник фактов для страниц игр и спорта.
+- `research/PAGE_RULES.md` — правила написания страниц (формат, компоненты, ссылки, запреты).
+- `python3 tools_check_page.py <slug>` — проверка одной страницы: длина меты, запрещённые слова, разделы, FAQ, кнопки, ссылки.
+- Превью игр: `src/assets/img/games/<slug-названия>.webp` подставляются в `{{games:...}}` автоматически по названию.
+- Иллюстрации разделов: `{{art:имя|alt}}` сразу после абзаца → картинка из `src/assets/img/sections/`.

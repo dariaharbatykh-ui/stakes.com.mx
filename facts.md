@@ -127,6 +127,18 @@
 | Caja Fuerte | Cuenta > Caja Fuerte; доступ: пароль, проверенный email, 2FA; хранение без срока | help «Protegiendo tus fondos…» |
 | Múltiple | все выборы должны выиграть; аннулированный считается x1 | help «¿Qué es una Apuesta Múltiple?» |
 
+## Детали акций (stake.mx/promotions, 20.10.2026)
+
+| Акция | Детали со страницы промо | Окончание |
+|---|---|---|
+| Liga MX – Pago en el minuto 90 | «Gol en el tiempo añadido no cuenta» | 28/12/2026 |
+| Pago en el minuto 90 (fútbol) | для матчей отдельных турниров | 10/06/2027 |
+| Reembolso al medio tiempo NBA | «¿Vas ganando por 16+ puntos al medio tiempo? Recupera tu dinero» | 30/06/2027 |
+| NFL – Reembolso 3er Cuarto | «¿Liderando por 10+ tras 3 cuartos y pierden?» | 14/02/2027 |
+| Siete Celestial NBA | «7 Momios, 7 Días» | 27/10/2027 |
+| Seguro UFC – Decisión Dividida | рынок Ganador любого боя UFC | 01/01/2027 |
+| JAQKpot, All in or Fold, Casino Challenges | — | 31/12/2026 |
+
 ## Пробелы
 
 - Минимальный депозит и вывод в MXN — официально не опубликованы.

@@ -214,7 +214,7 @@ a.card:hover { transform: translateY(-3px); background: var(--bg-3); }
 
 /* Футер */
 .site-footer { background: var(--bg-0); padding: 40px 0 28px; font-size: .9rem; }
-.footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 28px; }
+.footer-grid { display: grid; grid-template-columns: 1.5fr repeat(auto-fit, minmax(150px, 1fr)); gap: 28px; }
 .site-footer h2 { font-size: .95rem; color: #fff; margin: 0 0 12px; }
 .site-footer ul { list-style: none; padding: 0; margin: 0; }
 .site-footer li { margin-bottom: 8px; }
@@ -364,3 +364,5 @@ a.card:hover { transform: translateY(-3px); background: var(--bg-3); }
 @media (max-width: 700px) {
   .text-art { grid-template-columns: minmax(0, 1fr) 110px; gap: 12px; align-items: start; }
 }
+
+.side-title { margin: 4px 10px 6px; font-size: .72rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); }
