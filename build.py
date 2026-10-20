@@ -25,15 +25,47 @@ AFF = {
     "app": "https://scm.stakes.com.mx/?top=playeer&max",
 }
 
-NAV = [
-    ("/", "Inicio"),
-    ("/registro/", "Registro"),
-    ("/iniciar-sesion/", "Iniciar sesión"),
-    ("/app/", "App"),
-    ("/bono-de-bienvenida/", "Bonos"),
-    ("/metodos-de-pago/", "Pagos"),
-    ("/casino/", "Casino"),
-    ("/apuestas-deportivas/", "Apuestas"),
+ICONS = {
+    "home": '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+    "user": '<circle cx="10" cy="8" r="4"/><path d="M2 21c0-4 4-6 8-6s8 2 8 6"/><path d="M19 8v6M16 11h6"/>',
+    "key": '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/>',
+    "phone": '<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/>',
+    "gift": '<rect x="3" y="8" width="18" height="5" rx="1"/><path d="M5 13v8h14v-8M12 8v13M12 8c-2-4-6-4-6-1s6 1 6 1zm0 0c2-4 6-4 6-1s-6 1-6 1z"/>',
+    "ticket": '<path d="M3 7a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-3a2 2 0 0 0 0-4z"/><path d="M14 5v14" stroke-dasharray="2 2"/>',
+    "card": '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/>',
+    "dice": '<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/>',
+    "ball": '<circle cx="12" cy="12" r="9"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/><path d="M12 3v4M21 10l-5 0M3 10h5M7 20l2.5-5M17 20l-2.5-5"/>',
+    "shield": '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+    "info": '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>',
+    "mail": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+    "menu": '<path d="M4 7h16M4 12h16M4 17h16"/>',
+}
+
+
+def icon(name):
+    return (f'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+            f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{ICONS[name]}</svg>')
+
+
+SIDE_MAIN = [
+    ("/", "Inicio", "home"),
+    ("/registro/", "Registro", "user"),
+    ("/iniciar-sesion/", "Iniciar sesión", "key"),
+    ("/app/", "Stake app", "phone"),
+    ("/bono-de-bienvenida/", "Bonos y promociones", "gift"),
+    ("/codigo-promocional/", "Código promocional", "ticket"),
+    ("/metodos-de-pago/", "Depósitos y retiros", "card"),
+]
+SIDE_HELP = [
+    ("/juego-responsable/", "Juego responsable", "shield"),
+    ("/sobre-nosotros/", "Sobre nosotros", "info"),
+    ("/contacto/", "Contacto", "mail"),
+]
+BOTTOM_NAV = [
+    ("/casino/", "Casino", "dice"),
+    ("/apuestas-deportivas/", "Deportes", "ball"),
+    ("/bono-de-bienvenida/", "Bonos", "gift"),
+    ("/app/", "App", "phone"),
 ]
 
 FOOTER_GUIDES = [
@@ -59,8 +91,9 @@ FOOTER_LEGAL = [
 ]
 
 GAME_COLORS = [
-    ("#1f4c7a", "#132a3a"), ("#5b2a86", "#1a2c38"), ("#0f6b4f", "#132a3a"),
-    ("#8a3b12", "#1a2c38"), ("#7a1f4c", "#132a3a"), ("#22577a", "#1a2c38"),
+    ("#1475e1", "#0b2f5c"), ("#7b2ff7", "#2a0f5c"), ("#00b84a", "#063d1c"),
+    ("#ff7a00", "#5c2300"), ("#e8114b", "#4f0619"), ("#00a3c4", "#053a47"),
+    ("#d4a017", "#4a3500"), ("#c13ad9", "#3d0a47"),
 ]
 
 
@@ -94,8 +127,8 @@ def expand(body):
         for i, g in enumerate(items):
             name, prov = (g.split("/") + [""])[:2]
             c1, c2 = GAME_COLORS[i % len(GAME_COLORS)]
-            out.append(f'<div class="game" style="--g1:{c1};--g2:{c2}">'
-                       f'<b>{esc(name)}</b><span>{esc(prov)}</span></div>')
+            out.append(f'<div class="game"><div class="art" style="--g1:{c1};--g2:{c2}">'
+                       f'<b>{esc(name)}</b></div><span>{esc(prov)}</span></div>')
         return '<div class="games">' + "".join(out) + "</div>"
 
     body = re.sub(r"\{\{cta:([^}]+)\}\}", _cta, body)
@@ -109,12 +142,22 @@ def strip_tags(s):
     return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", s)).strip()
 
 
+def short_label(text):
+    t = strip_tags(text)
+    if t.lower().startswith("preguntas frecuentes"):
+        return "FAQ"
+    for cut in (" en Stake México", " de Stake México", " sobre Stake México"):
+        t = t.replace(cut, "")
+    t = re.sub(r":.*$", "", t).strip()
+    return t[:1].upper() + t[1:]
+
+
 def toc_from(body):
-    items = re.findall(r'<h2 id="([^"]+)">(.*?)</h2>', body, re.S)
+    items = re.findall(r'<h2 id="([^"]+)"(?: data-tab="([^"]+)")?>(.*?)</h2>', body, re.S)
     if len(items) < 3:
         return ""
-    lis = "".join(f'<li><a href="#{i}">{strip_tags(t)}</a></li>' for i, t in items)
-    return f'<nav class="toc" aria-label="Contenido"><strong>En esta página</strong><ol>{lis}</ol></nav>'
+    lis = "".join(f'<li><a href="#{i}">{esc(tab or short_label(t))}</a></li>' for i, tab, t in items)
+    return f'<nav class="tabs" aria-label="En esta página"><ul>{lis}</ul></nav>'
 
 
 def faq_schema(body):
@@ -135,33 +178,56 @@ def url_of(slug):
     return "/" if slug == "index" else f"/{slug}/"
 
 
-def nav_html(current):
-    lis = []
-    for href, label in NAV:
+def side_links(items, current):
+    out = []
+    for href, label, ico in items:
         cur = ' aria-current="page"' if href == current else ""
-        lis.append(f'<li><a href="{href}"{cur}>{label}</a></li>')
-    return "".join(lis)
+        out.append(f'<li><a href="{href}"{cur}>{icon(ico)}<span>{label}</span></a></li>')
+    return "".join(out)
 
 
 def links(items):
     return "".join(f'<li><a href="{h}">{t}</a></li>' for h, t in items)
 
 
+LOGO = (f'<a class="logo" href="/" aria-label="{SITE_NAME} inicio">'
+        f'<span class="logo-mark" aria-hidden="true">S</span><span class="logo-txt">Stakes<small>.com.mx</small></span></a>')
+
+
+def sidebar(current):
+    def tile(href, label, cls, ico):
+        cur = ' aria-current="page"' if href == current else ""
+        return f'<a class="side-tile {cls}" href="{href}"{cur}>{icon(ico)}<span>{label}</span></a>'
+    return f'''<aside class="sidebar" id="sidebar" aria-label="Menú">
+  <div class="side-head">{LOGO}</div>
+  <div class="side-tiles">{tile("/casino/", "Casino", "tile-casino", "dice")}{tile("/apuestas-deportivas/", "Deportes", "tile-sports", "ball")}</div>
+  <nav class="side-group" aria-label="Guías"><ul>{side_links(SIDE_MAIN, current)}</ul></nav>
+  <nav class="side-group" aria-label="Ayuda"><ul>{side_links(SIDE_HELP, current)}</ul></nav>
+  <p class="side-note"><span class="badge-18">18+</span> Juega con responsabilidad</p>
+</aside>
+<div class="scrim" data-close-menu hidden></div>'''
+
+
 def header(current, with_cta=True):
-    head_cta = ""
+    actions = ""
     if with_cta:
-        head_cta = ('<div class="header-cta">'
-                    + cta("Ir a Stake", "green").replace('class="btn btn-green"', 'class="btn btn-green btn-sm"')
-                    + "</div>")
-    return f'''<a class="skip" href="#main">Saltar al contenido</a>
-<header class="site-header">
-  <div class="wrap">
-    <a class="logo" href="/" aria-label="{SITE_NAME} inicio"><span class="logo-mark" aria-hidden="true">S</span>Stakes<small>.com.mx</small></a>
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav">Menú</button>
-    <nav class="nav" id="nav" aria-label="Principal"><ul>{nav_html(current)}</ul></nav>
-    {head_cta}
-  </div>
+        actions = ('<div class="top-actions">'
+                   + cta("Iniciar sesión", "ghost").replace('class="btn btn-ghost"', 'class="btn btn-ghost btn-sm hide-xs"')
+                   + cta("Registrarse").replace('class="btn"', 'class="btn btn-sm"')
+                   + "</div>")
+    return f'''<header class="topbar">
+  <button class="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="sidebar">{icon("menu")}</button>
+  <div class="topbar-logo">{LOGO}</div>
+  {actions}
 </header>'''
+
+
+def bottom_nav(current):
+    items = [f'<li><button type="button" class="open-menu" aria-controls="sidebar">{icon("menu")}<span>Menú</span></button></li>']
+    for href, label, ico in BOTTOM_NAV:
+        cur = ' aria-current="page"' if href == current else ""
+        items.append(f'<li><a href="{href}"{cur}>{icon(ico)}<span>{label}</span></a></li>')
+    return '<nav class="bottom-nav" aria-label="Navegación rápida"><ul>' + "".join(items) + "</ul></nav>"
 
 
 def footer():
@@ -169,7 +235,7 @@ def footer():
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <a class="logo" href="/"><span class="logo-mark" aria-hidden="true">S</span>Stakes<small>.com.mx</small></a>
+        {LOGO}
         <p>Guía en español sobre Stake México: registro, verificación, pagos en pesos, casino y apuestas deportivas.</p>
         <div class="badges"><span class="badge">18+</span><span class="badge">Juego responsable</span></div>
       </div>
@@ -234,6 +300,7 @@ def page_html(slug, meta, body):
         o = meta["offer"]
         lis = "".join(f"<li>{esc(x)}</li>" for x in o["points"])
         hero_side = (f'<aside class="offer-card"><span class="tag">{esc(o["tag"])}</span>'
+                     f'<div class="offer-art" aria-hidden="true"><span></span><span></span><span></span></div>'
                      f'<div class="big">{esc(o["title"])}</div><ul>{lis}</ul>'
                      f'{cta(o["button"], "green", o.get("link", "reg"))}'
                      f'<p class="fine">18+ · Aplican términos y condiciones de Stake · Juega con responsabilidad</p></aside>')
@@ -243,7 +310,7 @@ def page_html(slug, meta, body):
         btns = []
         for i, b in enumerate(meta["hero_buttons"]):
             text, _, link = b.partition("|")
-            btns.append(cta(text, "green" if i == 0 else "ghost", link or "reg"))
+            btns.append(cta(text, "" if i == 0 else "ghost", link or "reg"))
         actions = '<div class="hero-actions">' + "".join(btns) + "</div>"
 
     meta_line = ""
@@ -270,19 +337,13 @@ def page_html(slug, meta, body):
 </section>'''
 
     toc = toc_from(body) if kind != "legal" else ""
-    page_cls = "page wrap" + ("" if toc else " no-toc")
+    page_cls = "page" + (" narrow" if kind != "commercial" else "")
     author = ""
     if kind != "legal":
         author = (f'<div class="author"><div class="avatar" aria-hidden="true">S</div><div>'
                   f'<strong>Equipo editorial {SITE_NAME}</strong>'
                   f'<p>Cada dato sobre Stake se revisa antes de publicarse. '
                   f'Última revisión: {UPDATED_TXT}. <a href="/sobre-nosotros/">Cómo trabajamos</a>.</p></div></div>')
-
-    sticky = ""
-    body_cls = ""
-    if kind == "commercial":
-        sticky = f'<div class="sticky-cta"><span>Stake México · 18+ · pesos MXN</span>{cta("Registrarme", "green").replace("btn btn-green", "btn btn-green btn-sm")}</div>'
-        body_cls = ' class="has-sticky"'
 
     robots = meta.get("robots", "index, follow, max-image-preview:large")
     og_type = "website" if slug == "index" else "article"
@@ -307,15 +368,19 @@ def page_html(slug, meta, body):
 <meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#0f212e">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/manrope-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/style.css">
 <script type="application/ld+json">{ld}</script>
 </head>
-<body{body_cls}>
+<body>
+<a class="skip" href="#main">Saltar al contenido</a>
+{sidebar(url)}
+<div class="shell">
 {header(url, kind == "commercial")}
 <main id="main">
 {hero}
+{toc}
 <div class="{page_cls}">
-  {toc}
   <article class="content{' legal' if kind == 'legal' else ''}">
 {body}
 {author}
@@ -323,7 +388,8 @@ def page_html(slug, meta, body):
 </div>
 </main>
 {footer()}
-{sticky}
+</div>
+{bottom_nav(url)}
 <script src="/assets/site.js" defer></script>
 </body>
 </html>

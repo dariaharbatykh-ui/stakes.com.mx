@@ -18,18 +18,25 @@
 <meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#0f212e">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/manrope-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/style.css">
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://stakes.com.mx/"}, {"@type": "ListItem", "position": 2, "name": "Iniciar sesión", "item": "https://stakes.com.mx/iniciar-sesion/"}]}, {"@type": "Article", "headline": "Iniciar sesión en Stake México: entra a tu cuenta", "description": "Iniciar sesión en Stake México: cómo entrar a Stake con contraseña, Google o passkey, activar 2FA y recuperar el acceso. Entra a tu cuenta segura.", "url": "https://stakes.com.mx/iniciar-sesion/", "inLanguage": "es-MX", "dateModified": "2026-10-20", "datePublished": "2026-10-20", "author": {"@type": "Organization", "name": "Equipo editorial Stakes.com.mx", "url": "https://stakes.com.mx/sobre-nosotros/"}, "publisher": {"@type": "Organization", "name": "Stakes.com.mx", "url": "https://stakes.com.mx/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿Puedo usar mi cuenta de Stake internacional en Stake México?", "acceptedAnswer": {"@type": "Answer", "text": "No. Stake México requiere una cuenta propia. Si te registras con el mismo correo de la versión internacional, tu nivel VIP se transfiere."}}, {"@type": "Question", "name": "¿Stake México tiene inicio de sesión con passkey?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. Puedes agregar una passkey en Configuración → Seguridad y entrar con huella, reconocimiento facial o PIN."}}, {"@type": "Question", "name": "¿Qué hago si perdí mi 2FA?", "acceptedAnswer": {"@type": "Answer", "text": "Contacta al soporte de Stake por chat en vivo o por correo para recuperar el acceso a tu cuenta."}}, {"@type": "Question", "name": "¿Puedo entrar a mi cuenta durante una pausa en el juego?", "acceptedAnswer": {"@type": "Answer", "text": "Sí. Puedes iniciar sesión, reclamar beneficios pendientes y retirar fondos, pero no jugar hasta que termine la pausa."}}]}]}</script>
 </head>
-<body class="has-sticky">
+<body>
 <a class="skip" href="#main">Saltar al contenido</a>
-<header class="site-header">
-  <div class="wrap">
-    <a class="logo" href="/" aria-label="Stakes.com.mx inicio"><span class="logo-mark" aria-hidden="true">S</span>Stakes<small>.com.mx</small></a>
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav">Menú</button>
-    <nav class="nav" id="nav" aria-label="Principal"><ul><li><a href="/">Inicio</a></li><li><a href="/registro/">Registro</a></li><li><a href="/iniciar-sesion/" aria-current="page">Iniciar sesión</a></li><li><a href="/app/">App</a></li><li><a href="/bono-de-bienvenida/">Bonos</a></li><li><a href="/metodos-de-pago/">Pagos</a></li><li><a href="/casino/">Casino</a></li><li><a href="/apuestas-deportivas/">Apuestas</a></li></ul></nav>
-    <div class="header-cta"><a class="btn btn-green btn-sm" href="https://scm.stakes.com.mx/?top=playeer" target="_blank" rel="nofollow sponsored">Ir a Stake</a></div>
-  </div>
+<aside class="sidebar" id="sidebar" aria-label="Menú">
+  <div class="side-head"><a class="logo" href="/" aria-label="Stakes.com.mx inicio"><span class="logo-mark" aria-hidden="true">S</span><span class="logo-txt">Stakes<small>.com.mx</small></span></a></div>
+  <div class="side-tiles"><a class="side-tile tile-casino" href="/casino/"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg><span>Casino</span></a><a class="side-tile tile-sports" href="/apuestas-deportivas/"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/><path d="M12 3v4M21 10l-5 0M3 10h5M7 20l2.5-5M17 20l-2.5-5"/></svg><span>Deportes</span></a></div>
+  <nav class="side-group" aria-label="Guías"><ul><li><a href="/"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Inicio</span></a></li><li><a href="/registro/"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="4"/><path d="M2 21c0-4 4-6 8-6s8 2 8 6"/><path d="M19 8v6M16 11h6"/></svg><span>Registro</span></a></li><li><a href="/iniciar-sesion/" aria-current="page"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/></svg><span>Iniciar sesión</span></a></li><li><a href="/app/"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg><span>Stake app</span></a></li><li><a href="/bono-de-bienvenida/"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="5" rx="1"/><path d="M5 13v8h14v-8M12 8v13M12 8c-2-4-6-4-6-1s6 1 6 1zm0 0c2-4 6-4 6-1s-6 1-6 1z"/></svg><span>Bonos y promociones</span></a></li><li><a href="/codigo-promocional/"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-3a2 2 0 0 0 0-4z"/><path d="M14 5v14" stroke-dasharray="2 2"/></svg><span>Código promocional</span></a></li><li><a href="/metodos-de-pago/"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg><span>Depósitos y retiros</span></a></li></ul></nav>
+  <nav class="side-group" aria-label="Ayuda"><ul><li><a href="/juego-responsable/"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg><span>Juego responsable</span></a></li><li><a href="/sobre-nosotros/"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><span>Sobre nosotros</span></a></li><li><a href="/contacto/"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>Contacto</span></a></li></ul></nav>
+  <p class="side-note"><span class="badge-18">18+</span> Juega con responsabilidad</p>
+</aside>
+<div class="scrim" data-close-menu hidden></div>
+<div class="shell">
+<header class="topbar">
+  <button class="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="sidebar"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  <div class="topbar-logo"><a class="logo" href="/" aria-label="Stakes.com.mx inicio"><span class="logo-mark" aria-hidden="true">S</span><span class="logo-txt">Stakes<small>.com.mx</small></span></a></div>
+  <div class="top-actions"><a class="btn btn-ghost btn-sm hide-xs" href="https://scm.stakes.com.mx/?top=playeer" target="_blank" rel="nofollow sponsored">Iniciar sesión</a><a class="btn btn-sm" href="https://scm.stakes.com.mx/?top=playeer" target="_blank" rel="nofollow sponsored">Registrarse</a></div>
 </header>
 <main id="main">
 <section class="hero">
@@ -40,17 +47,17 @@
         <h1>Iniciar sesión en Stake México: entra a tu cuenta</h1>
         <div class="meta-line"><span>Actualizado: <time datetime="2026-10-20">20 de octubre de 2026</time></span><span>Por: Equipo editorial Stakes.com.mx</span></div>
         <p class="lead">Aquí tienes todo para iniciar sesión en Stake México sin problemas: los pasos para entrar, cómo usar passkeys y 2FA, y qué hacer si olvidaste tu contraseña o perdiste el acceso a tu correo.</p>
-        <div class="hero-actions"><a class="btn btn-green" href="https://scm.stakes.com.mx/?top=playeer" target="_blank" rel="nofollow sponsored">Entrar a Stake</a></div>
+        <div class="hero-actions"><a class="btn" href="https://scm.stakes.com.mx/?top=playeer" target="_blank" rel="nofollow sponsored">Entrar a Stake</a></div>
       </div>
       
     </div>
   </div>
 </section>
-<div class="page wrap">
-  <nav class="toc" aria-label="Contenido"><strong>En esta página</strong><ol><li><a href="#como-entrar">Cómo iniciar sesión en Stake</a></li><li><a href="#passkeys">Entrar con passkey: sin contraseña</a></li><li><a href="#2fa">Autenticación de dos factores (2FA)</a></li><li><a href="#problemas">Problemas para iniciar sesión</a></li><li><a href="#seguridad">Consejos de seguridad para tu cuenta</a></li><li><a href="#faq">Preguntas frecuentes sobre el inicio de sesión</a></li></ol></nav>
+<nav class="tabs" aria-label="En esta página"><ul><li><a href="#como-entrar">Cómo entrar</a></li><li><a href="#passkeys">Passkey</a></li><li><a href="#2fa">2FA</a></li><li><a href="#problemas">Problemas</a></li><li><a href="#seguridad">Seguridad</a></li><li><a href="#faq">FAQ</a></li></ul></nav>
+<div class="page">
   <article class="content">
 <section>
-<h2 id="como-entrar">Cómo iniciar sesión en Stake</h2>
+<h2 id="como-entrar" data-tab="Cómo entrar">Cómo iniciar sesión en Stake</h2>
 <p>Para <strong>iniciar sesión en Stake México</strong> guarda el sitio en favoritos y entra siempre desde ahí: así evitas páginas falsas que imitan el inicio de sesión de Stake.</p>
 <ol class="steps">
 <li><strong>Abre Stake</strong>En computadora o en el navegador de tu celular.</li>
@@ -62,7 +69,7 @@
 </section>
 
 <section>
-<h2 id="passkeys">Entrar con passkey: sin contraseña</h2>
+<h2 id="passkeys" data-tab="Passkey">Entrar con passkey: sin contraseña</h2>
 <p>Stake permite iniciar sesión con una passkey, una alternativa a las contraseñas, al correo y al 2FA. La passkey usa la biometría de tu dispositivo (huella o reconocimiento facial) o tu PIN, y se basa en el estándar FIDO que usan Apple, Google y Microsoft.</p>
 <ul>
 <li>No se puede adivinar ni robar en una filtración de datos.</li>
@@ -78,14 +85,14 @@
 </section>
 
 <section>
-<h2 id="2fa">Autenticación de dos factores (2FA)</h2>
+<h2 id="2fa" data-tab="2FA">Autenticación de dos factores (2FA)</h2>
 <p>El 2FA agrega un código temporal a tu contraseña. Aunque alguien conozca tu contraseña, no podrá entrar sin ese código. Se activa en Configuración → Seguridad con una app de autenticación.</p>
 <p>Si pierdes el acceso a tu 2FA, por ejemplo al cambiar de teléfono, el Centro de Ayuda de Stake explica cómo recuperarlo con el soporte.</p>
 <div class="note"><p><strong>Protege también tu saldo.</strong> Stake ofrece una Caja Fuerte para separar fondos de tu saldo de juego. Es útil si quieres apartar una ganancia y no usarla por impulso.</p></div>
 </section>
 
 <section>
-<h2 id="problemas">Problemas para iniciar sesión</h2>
+<h2 id="problemas" data-tab="Problemas">Problemas para iniciar sesión</h2>
 <div class="table-wrap"><table>
 <tr><th>Problema</th><th>Qué hacer</th></tr>
 <tr><td>Olvidaste tu contraseña</td><td>Usa la opción para restablecer la contraseña en el formulario de acceso y sigue el enlace que llega a tu correo</td></tr>
@@ -99,7 +106,7 @@
 </section>
 
 <section>
-<h2 id="seguridad">Consejos de seguridad para tu cuenta</h2>
+<h2 id="seguridad" data-tab="Seguridad">Consejos de seguridad para tu cuenta</h2>
 <ul>
 <li>No compartas tu contraseña ni tus códigos de 2FA con nadie, incluido quien diga ser soporte.</li>
 <li>Si sospechas un acceso no autorizado, avisa de inmediato al soporte de Stake, como piden los términos de la plataforma.</li>
@@ -124,7 +131,7 @@
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <a class="logo" href="/"><span class="logo-mark" aria-hidden="true">S</span>Stakes<small>.com.mx</small></a>
+        <a class="logo" href="/" aria-label="Stakes.com.mx inicio"><span class="logo-mark" aria-hidden="true">S</span><span class="logo-txt">Stakes<small>.com.mx</small></span></a>
         <p>Guía en español sobre Stake México: registro, verificación, pagos en pesos, casino y apuestas deportivas.</p>
         <div class="badges"><span class="badge">18+</span><span class="badge">Juego responsable</span></div>
       </div>
@@ -139,7 +146,8 @@
     </div>
   </div>
 </footer>
-<div class="sticky-cta"><span>Stake México · 18+ · pesos MXN</span><a class="btn btn-green btn-sm" href="https://scm.stakes.com.mx/?top=playeer" target="_blank" rel="nofollow sponsored">Registrarme</a></div>
+</div>
+<nav class="bottom-nav" aria-label="Navegación rápida"><ul><li><button type="button" class="open-menu" aria-controls="sidebar"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Menú</span></button></li><li><a href="/casino/"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg><span>Casino</span></a></li><li><a href="/apuestas-deportivas/"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/><path d="M12 3v4M21 10l-5 0M3 10h5M7 20l2.5-5M17 20l-2.5-5"/></svg><span>Deportes</span></a></li><li><a href="/bono-de-bienvenida/"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="5" rx="1"/><path d="M5 13v8h14v-8M12 8v13M12 8c-2-4-6-4-6-1s6 1 6 1zm0 0c2-4 6-4 6-1s-6 1-6 1z"/></svg><span>Bonos</span></a></li><li><a href="/app/"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg><span>App</span></a></li></ul></nav>
 <script src="/assets/site.js" defer></script>
 </body>
 </html>

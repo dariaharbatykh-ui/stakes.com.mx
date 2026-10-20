@@ -7,7 +7,7 @@
 | Путь | Что внутри |
 |---|---|
 | `src/pages/*.html` | контент страниц; сверху JSON с метаданными (`title`, `description`, `h1`, `lead`, `offer`, `type`) |
-| `src/assets/` | `style.css`, `site.js` (мобильное меню), `favicon.svg` |
+| `src/assets/` | `style.css` (дизайн в стиле Stake), `site.js` (меню, табы), `favicon.svg`, `fonts/` (Manrope, OFL) |
 | `build.py` | собирает `public/`: шапка, меню, футер, хлебные крошки, оглавление, schema.org, `sitemap.xml`, `robots.txt`; проверяет длину title ≤ 60 и description ≤ 160 и дубли |
 | `public/` | готовый сайт, можно выкладывать как есть |
 | `facts.md` | база фактов о бренде с официального сайта и источниками |
