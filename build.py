@@ -41,6 +41,14 @@ ICONS = {
     "mail": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
     "menu": '<path d="M4 7h16M4 12h16M4 17h16"/>',
     "close": '<path d="M6 6l12 12M18 6L6 18"/>',
+    "trophy": '<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>',
+    "crown": '<path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/>',
+    "tv": '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M8 3l4 3 4-3"/><circle cx="12" cy="12.5" r="2.5" fill="currentColor" stroke="none"/>',
+    "lock": '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+    "chat": '<path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h8M8 13h5"/>',
+    "star": '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+    "alert": '<path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17v.5"/>',
+    "heart": '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
 }
 
 
@@ -230,6 +238,61 @@ def phones_html(keys):
     return f'<div class="{cls}" style="--n:{len(figs)}">' + "".join(figs) + "</div>"
 
 
+# Иконки по смыслу заголовка (порядок важен: сначала частные случаи)
+ICON_RULES = [
+    ("chat", ("preguntas frecuentes",)),
+    ("trophy", ("top juegos", "slots en tendencia")),
+    ("alert", ("errores", "problemas", "falso", "senales de alerta", "no se acredita", "no carga")),
+    ("ticket", ("codigo", "bonus drops", "canjear", "multiple")),
+    ("crown", ("vip", "nivel")),
+    ("gift", ("bono", "promocion", "recompensa", "reclamar", "cumpleanos", "rakeback", "recarga")),
+    ("phone", ("app", "celular", "movil", "android", "iphone")),
+    ("tv", ("en vivo", "concursos")),
+    ("key", ("iniciar sesion", "contrasena", "passkey", "entrar")),
+    ("lock", ("caja fuerte", "2fa", "autenticacion")),
+    ("card", ("deposit", "retir", "pago", "spei", "limite", "ganancias")),
+    ("user", ("registr", "requisito", "verific", "cuenta", "documento")),
+    ("ball", ("apuesta", "deport", "retirarse", "sportsbook")),
+    ("dice", ("casino", "slots", "tragamonedas", "original", "juego", "poker", "proveedor", "mines", "plinko", "burst")),
+    ("heart", ("responsable", "consejos", "ayuda", "menores", "pausa")),
+    ("shield", ("segur", "legal", "licencia", "justo", "confiable")),
+    ("star", ("datos clave", "secciones", "que hay", "que puedes", "existe", "despues", "empezar", "tipos")),
+]
+
+
+def icon_for(text):
+    t = slugify(strip_tags(text)).replace("-", " ")
+    for name, keys in ICON_RULES:
+        if any(k in t for k in keys):
+            return name
+    return None
+
+
+def add_icons(body):
+    def _h2(m):
+        name = icon_for(m.group(2))
+        if not name:
+            return m.group(0)
+        return f'{m.group(1)}<span class="h-ico" aria-hidden="true">{icon(name)}</span>{m.group(2)}</h2>'
+    body = re.sub(r'(<h2 id="[^"]+"(?: data-tab="[^"]+")?>)(.*?)</h2>', _h2, body)
+
+    def _card(m):
+        inner = m.group(2)
+        h3 = re.search(r"<h3>(.*?)</h3>", inner)
+        kicker = re.search(r'<span class="kicker">(.*?)</span>', inner)
+        name = icon_for((h3.group(1) if h3 else "") + " " + (kicker.group(1) if kicker else ""))
+        if not name:
+            return m.group(0)
+        return f'{m.group(1)}<span class="card-ico" aria-hidden="true">{icon(name)}</span>{inner}{m.group(3)}'
+    body = re.sub(r'(<(?:div|a) class="card"[^>]*>)(.*?)(</(?:div|a)>)', _card, body, flags=re.S)
+    return body
+
+
+def art_html(name, alt):
+    return (f'<figure class="sec-art"><img src="/assets/img/sections/{name}.webp" width="1024" height="1024" '
+            f'loading="lazy" decoding="async" alt="{esc(alt)}"></figure>')
+
+
 def top_games_html():
     out = []
     for i, (name, prov, kind, rtp, vol, mx) in enumerate(TOP_GAMES):
@@ -274,6 +337,8 @@ def expand(body):
     body = re.sub(r"\{\{ctabox:([^}]+)\}\}", _box, body)
     body = re.sub(r"\{\{games:([^}]+)\}\}", _games, body)
     body = body.replace("{{topgames}}", top_games_html())
+    body = re.sub(r"(<p>(?:(?!</p>).)*</p>)\s*\{\{art:([a-z-]+)\|([^}]+)\}\}",
+                  lambda m: f'<div class="text-art"><div>{m.group(1)}</div>{art_html(m.group(2), m.group(3))}</div>', body, flags=re.S)
     body = re.sub(r"\{\{phones:([a-z,]+)\}\}", lambda m: phones_html(m.group(1)), body)
     body = re.sub(r"\{\{icon:([a-z]+)\}\}", lambda m: icon(m.group(1)), body)
     body = body.replace("{{updated}}", UPDATED_TXT)
@@ -427,6 +492,8 @@ def _page_html(slug, meta, body):
     canonical = SITE + url
     kind = meta.get("type", "commercial")
     body = expand(body)
+    if kind != "legal":
+        body = add_icons(body)
 
     crumbs = ""
     graph = []
@@ -473,6 +540,19 @@ def _page_html(slug, meta, body):
                      f'<div class="big">{esc(o["title"])}</div>'
                      f'{cta(o["button"], "green", o.get("link", "reg"))}'
                      f'<p class="fine">18+ · Aplican términos y condiciones de Stake · Juega con responsabilidad</p></aside>')
+
+    # Картинка первого экрана для страниц без карточки предложения
+    if not hero_side:
+        if meta.get("hero_phone"):
+            k = meta["hero_phone"]
+            cap, alt = PHONES[k]
+            hero_side = (f'<figure class="hero-art hero-phone"><div class="phone-frame">'
+                         f'<img src="/assets/img/app/stake-movil-{k}.jpg" width="517" height="1120" fetchpriority="high" alt="{esc(alt)}">'
+                         f'</div></figure>')
+        elif (SRC / "assets" / "img" / "hero" / f"{slug}.webp").exists():
+            alt = meta.get("hero_alt", meta["h1"])
+            hero_side = (f'<figure class="hero-art"><img src="/assets/img/hero/{slug}.webp" width="1024" height="1024" '
+                         f'fetchpriority="high" alt="{esc(alt)}"></figure>')
 
     actions = ""
     if meta.get("hero_buttons"):

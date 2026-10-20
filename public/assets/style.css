@@ -340,3 +340,27 @@ a.card:hover { transform: translateY(-3px); background: var(--bg-3); }
 .social a:hover { background: var(--bg-3); color: #fff; }
 .social .ico { width: 20px; height: 20px; }
 .site-footer .social + .disclaimer { margin-top: 20px; }
+
+/* Картинка первого экрана */
+.hero-art { margin: 0; display: flex; justify-content: center; }
+.hero-art { overflow: hidden; }
+.hero-art img { width: 100%; max-width: 400px; height: auto; transform: scale(1.25); -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 52%, transparent 71%); mask-image: radial-gradient(circle at 50% 50%, #000 52%, transparent 71%); }
+.hero-phone .phone-frame { width: 230px; transform: rotate(4deg); }
+.hero-phone img { -webkit-mask-image: none; mask-image: none; max-width: none; }
+@media (max-width: 860px) { .hero .hero-art { display: none; } }
+
+/* Иконки у заголовков разделов и в карточках */
+.h-ico { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: var(--r); background: var(--bg-2); color: var(--blue-h); margin-right: 12px; vertical-align: -6px; box-shadow: var(--shadow); }
+.h-ico .ico { width: 20px; height: 20px; }
+.card { position: relative; }
+.card-ico { display: grid; place-items: center; width: 38px; height: 38px; border-radius: var(--r); background: linear-gradient(135deg, rgba(20,117,225,.25), rgba(0,231,1,.12)); color: #fff; margin-bottom: 10px; }
+.card-ico .ico { width: 20px; height: 20px; }
+
+/* Иллюстрация рядом с вводным абзацем раздела */
+.text-art { display: grid; grid-template-columns: minmax(0, 1fr) 240px; gap: 28px; align-items: center; margin-bottom: 1em; }
+.text-art p:last-child { margin-bottom: 0; }
+.sec-art { margin: 0; aspect-ratio: 1; overflow: hidden; }
+.sec-art img { width: 100%; height: auto; transform: scale(1.45); -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 50%, transparent 70%); mask-image: radial-gradient(circle at 50% 50%, #000 50%, transparent 70%); }
+@media (max-width: 700px) {
+  .text-art { grid-template-columns: minmax(0, 1fr) 110px; gap: 12px; align-items: start; }
+}
