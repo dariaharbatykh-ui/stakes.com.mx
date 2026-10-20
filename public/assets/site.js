@@ -1,19 +1,24 @@
 (function () {
   var body = document.body;
   var sidebar = document.getElementById('sidebar');
-  var scrim = document.querySelector('[data-close-menu]');
+  var scrim = document.querySelector('.scrim');
   var openers = document.querySelectorAll('.burger, .open-menu');
+  var closers = document.querySelectorAll('[data-close-menu]');
 
   function setOpen(open) {
     body.classList.toggle('menu-open', open);
     if (scrim) scrim.hidden = !open;
     openers.forEach(function (b) { b.setAttribute('aria-expanded', open ? 'true' : 'false'); });
+    if (open && sidebar) {
+      var first = sidebar.querySelector('a, button');
+      if (first) first.focus({ preventScroll: true });
+    }
   }
 
   openers.forEach(function (b) {
     b.addEventListener('click', function () { setOpen(!body.classList.contains('menu-open')); });
   });
-  if (scrim) scrim.addEventListener('click', function () { setOpen(false); });
+  closers.forEach(function (b) { b.addEventListener('click', function () { setOpen(false); }); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
   if (sidebar) sidebar.addEventListener('click', function (e) { if (e.target.closest('a')) setOpen(false); });
 

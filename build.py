@@ -4,6 +4,7 @@
 Страница = src/pages/<slug>.html: сверху JSON с метаданными в <!--{ ... }-->,
 ниже HTML контента. Запуск: python3 build.py
 """
+import hashlib
 import html
 import json
 import re
@@ -39,6 +40,7 @@ ICONS = {
     "info": '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>',
     "mail": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
     "menu": '<path d="M4 7h16M4 12h16M4 17h16"/>',
+    "close": '<path d="M6 6l12 12M18 6L6 18"/>',
 }
 
 
@@ -97,6 +99,11 @@ GAME_COLORS = [
 ]
 
 
+def asset_ver(name):
+    """Короткий хэш файла для ?v= — после правки CSS/JS браузеры и Cloudflare берут новую версию."""
+    return hashlib.md5((SRC / "assets" / name).read_bytes()).hexdigest()[:8]
+
+
 def esc(s):
     return html.escape(s, quote=True)
 
@@ -107,10 +114,38 @@ def cta(text, style="", link="reg"):
             f'rel="nofollow sponsored">{esc(text)}</a>')
 
 
+# Топ-игры: данные провайдеров (RTP — максимальная версия; оператор может использовать другую).
+TOP_GAMES = [
+    ("Gates of Olympus 1000", "Pragmatic Play", "Slot", "96.50%", "Alta", "15,000x"),
+    ("Sugar Rush 1000", "Pragmatic Play", "Slot", "96.53%", "Alta", "25,000x"),
+    ("Duck Hunters 2", "Nolimit City", "Slot", "96.00%", "Extrema", "40,000x"),
+    ("Le Fisherman", "Hacksaw Gaming", "Slot", "96.33%", "Baja-media", "15,000x"),
+    ("Crazy Time", "Evolution", "Concurso en vivo", "96.08%", "Variable", "20,000x"),
+    ("Mines", "Originales de Stake", "Original", "99%", "Ajustable", "Según el riesgo"),
+    ("Plinko", "Originales de Stake", "Original", "99%", "Ajustable", "Según el riesgo"),
+    ("Dice", "Originales de Stake", "Original", "99%", "Ajustable", "Según el riesgo"),
+]
+
+
+def top_games_html():
+    out = []
+    for i, (name, prov, kind, rtp, vol, mx) in enumerate(TOP_GAMES):
+        c1, c2 = GAME_COLORS[i % len(GAME_COLORS)]
+        out.append(
+            f'<article class="tg"><div class="art" style="--g1:{c1};--g2:{c2}">'
+            f'<span class="rank">#{i + 1}</span><b>{esc(name)}</b></div>'
+            f'<div class="tg-body"><h3>{esc(name)}</h3><p class="prov">{esc(prov)} · {esc(kind)}</p>'
+            f'<dl><div><dt>RTP</dt><dd>{rtp}</dd></div><div><dt>Volatilidad</dt><dd>{esc(vol)}</dd></div>'
+            f'<div><dt>Ganancia máx.</dt><dd>{esc(mx)}</dd></div></dl></div></article>')
+    return ('<div class="top-games">' + "".join(out) + '</div>'
+            '<p class="fine-print">RTP de la versión con mayor retorno publicada por cada proveedor. '
+            'El RTP y la ganancia máxima pueden variar: consulta la información dentro de cada juego en Stake.</p>')
+
+
 def expand(body):
     """Шорткоды: {{cta:Текст|green|app}}, {{ctabox:Заголовок|Подпись|Кнопка|app}},
     последний параметр — тип ссылки: reg (по умолчанию) или app;
-    {{games:Название/Провайдер;...}}, {{updated}}."""
+    {{games:Название/Провайдер;...}}, {{topgames}}, {{updated}}."""
     def _cta(m):
         parts = m.group(1).split("|")
         return cta(parts[0], parts[1] if len(parts) > 1 else "",
@@ -134,6 +169,8 @@ def expand(body):
     body = re.sub(r"\{\{cta:([^}]+)\}\}", _cta, body)
     body = re.sub(r"\{\{ctabox:([^}]+)\}\}", _box, body)
     body = re.sub(r"\{\{games:([^}]+)\}\}", _games, body)
+    body = body.replace("{{topgames}}", top_games_html())
+    body = re.sub(r"\{\{icon:([a-z]+)\}\}", lambda m: icon(m.group(1)), body)
     body = body.replace("{{updated}}", UPDATED_TXT)
     return body
 
@@ -199,7 +236,7 @@ def sidebar(current):
         cur = ' aria-current="page"' if href == current else ""
         return f'<a class="side-tile {cls}" href="{href}"{cur}>{icon(ico)}<span>{label}</span></a>'
     return f'''<aside class="sidebar" id="sidebar" aria-label="Menú">
-  <div class="side-head">{LOGO}</div>
+  <div class="side-head">{LOGO}<button class="side-close" type="button" aria-label="Cerrar menú" data-close-menu>{icon("close")}</button></div>
   <div class="side-tiles">{tile("/casino/", "Casino", "tile-casino", "dice")}{tile("/apuestas-deportivas/", "Deportes", "tile-sports", "ball")}</div>
   <nav class="side-group" aria-label="Guías"><ul>{side_links(SIDE_MAIN, current)}</ul></nav>
   <nav class="side-group" aria-label="Ayuda"><ul>{side_links(SIDE_HELP, current)}</ul></nav>
@@ -216,9 +253,11 @@ def header(current, with_cta=True):
                    + cta("Registrarse").replace('class="btn"', 'class="btn btn-sm"')
                    + "</div>")
     return f'''<header class="topbar">
-  <button class="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="sidebar">{icon("menu")}</button>
-  <div class="topbar-logo">{LOGO}</div>
-  {actions}
+  <div class="topbar-in">
+    <button class="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="sidebar">{icon("menu")}</button>
+    <div class="topbar-logo">{LOGO}</div>
+    {actions}
+  </div>
 </header>'''
 
 
@@ -273,7 +312,7 @@ def page_html(slug, meta, body):
         })
     else:
         graph.append({"@type": "WebSite", "@id": SITE + "/#website", "url": SITE + "/",
-                      "name": SITE_NAME, "inLanguage": "es-MX"})
+                      "name": SITE_NAME, "inLanguage": "es"})
         graph.append({"@type": "Organization", "@id": SITE + "/#org", "name": SITE_NAME,
                       "url": SITE + "/", "email": "contacto@stakes.com.mx"})
 
@@ -282,7 +321,7 @@ def page_html(slug, meta, body):
         "headline": meta["h1"],
         "description": meta["description"],
         "url": canonical,
-        "inLanguage": "es-MX",
+        "inLanguage": "es",
         "dateModified": UPDATED_ISO,
         "datePublished": UPDATED_ISO,
         "author": {"@type": "Organization", "name": SITE_NAME, "url": SITE + "/"},
@@ -298,10 +337,9 @@ def page_html(slug, meta, body):
     hero_side = ""
     if meta.get("offer"):
         o = meta["offer"]
-        lis = "".join(f"<li>{esc(x)}</li>" for x in o["points"])
         hero_side = (f'<aside class="offer-card"><span class="tag">{esc(o["tag"])}</span>'
                      f'<div class="offer-art" aria-hidden="true"><span></span><span></span><span></span></div>'
-                     f'<div class="big">{esc(o["title"])}</div><ul>{lis}</ul>'
+                     f'<div class="big">{esc(o["title"])}</div>'
                      f'{cta(o["button"], "green", o.get("link", "reg"))}'
                      f'<p class="fine">18+ · Aplican términos y condiciones de Stake · Juega con responsabilidad</p></aside>')
 
@@ -320,7 +358,9 @@ def page_html(slug, meta, body):
     else:
         meta_line = f'<div class="meta-line"><span>Última actualización: <time datetime="{UPDATED_ISO}">{UPDATED_TXT}</time></span></div>'
 
-    lead = f'<p class="lead">{meta["lead"]}</p>' if meta.get("lead") else ""
+    lead = f'<p class="lead">{esc(meta["sub"])}</p>' if meta.get("sub") else ""
+    if meta.get("lead"):
+        body = f'<p class="intro">{meta["lead"]}</p>\n' + body
     hero = f'''<section class="hero">
   <div class="wrap">
     {crumbs}
@@ -343,7 +383,7 @@ def page_html(slug, meta, body):
     og_type = "website" if slug == "index" else "article"
 
     return f'''<!doctype html>
-<html lang="es-MX">
+<html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -351,7 +391,7 @@ def page_html(slug, meta, body):
 <meta name="description" content="{esc(meta["description"])}">
 <meta name="robots" content="{robots}">
 <link rel="canonical" href="{canonical}">
-<link rel="alternate" hreflang="es-MX" href="{canonical}">
+<link rel="alternate" hreflang="es" href="{canonical}">
 <link rel="alternate" hreflang="x-default" href="{canonical}">
 <meta property="og:locale" content="es_MX">
 <meta property="og:type" content="{og_type}">
@@ -363,7 +403,7 @@ def page_html(slug, meta, body):
 <meta name="theme-color" content="#0f212e">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/manrope-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/style.css?v={asset_ver("style.css")}">
 <script type="application/ld+json">{ld}</script>
 </head>
 <body>
@@ -383,7 +423,7 @@ def page_html(slug, meta, body):
 {footer()}
 </div>
 {bottom_nav(url)}
-<script src="/assets/site.js" defer></script>
+<script src="/assets/site.js?v={asset_ver("site.js")}" defer></script>
 </body>
 </html>
 '''
@@ -441,6 +481,21 @@ def main():
         + "\n".join(sitemap) + "\n</urlset>\n", encoding="utf-8")
     (OUT / "robots.txt").write_text(
         f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n",
+        encoding="utf-8")
+
+    # Cloudflare (Workers static assets): кэш и заголовки безопасности
+    (OUT / "_headers").write_text(
+        "/*\n"
+        "  X-Content-Type-Options: nosniff\n"
+        "  Referrer-Policy: strict-origin-when-cross-origin\n"
+        "  X-Frame-Options: SAMEORIGIN\n"
+        "  Permissions-Policy: camera=(), microphone=(), geolocation=()\n"
+        "/assets/*\n"
+        "  Cache-Control: public, max-age=31536000, immutable\n"
+        "/sitemap.xml\n"
+        "  Cache-Control: public, max-age=3600\n"
+        "/robots.txt\n"
+        "  Cache-Control: public, max-age=3600\n",
         encoding="utf-8")
 
     if errors:

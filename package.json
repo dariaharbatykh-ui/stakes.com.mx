@@ -1,0 +1,11 @@
+{
+  "name": "stakes-com-mx",
+  "private": true,
+  "description": "Static HTML site about Stake México, served by Cloudflare Workers static assets",
+  "scripts": {
+    "build": "python3 build.py",
+    "dev": "python3 build.py && node serve.mjs 8080",
+    "preview": "python3 build.py && npx wrangler dev",
+    "deploy": "python3 build.py && npx wrangler deploy"
+  }
+}

@@ -1,6 +1,6 @@
 # stakes.com.mx
 
-Статический сайт на чистом HTML/CSS о Stake México (stake.mx), на испанском (es-MX).
+Статический сайт на чистом HTML/CSS о Stake México (stake.mx), на испанском (lang="es").
 
 ## Структура
 
@@ -16,14 +16,34 @@
 ## Команды
 
 ```bash
-python3 build.py
+npm run build
 ```
 
 ```bash
-node serve.mjs 8080
+npm run dev
 ```
 
-Затем открыть http://localhost:8080.
+Локально: http://localhost:8080.
+
+## Cloudflare
+
+Сайт отдаётся Cloudflare Workers как статические файлы из `public/` (`wrangler.toml`, без отдельного скрипта):
+
+- `not_found_handling = "404-page"` — неизвестные адреса получают `404.html` с кодом 404;
+- `html_handling = "auto-trailing-slash"` — `/registro` → `/registro/`;
+- `public/_headers` (создаёт `build.py`) — кэш на год для `/assets/*` (у CSS/JS в ссылке `?v=хэш`, поэтому правки подхватываются сразу) и заголовки безопасности.
+
+Первый деплой:
+
+```bash
+npx wrangler login
+```
+
+```bash
+npm run deploy
+```
+
+После деплоя сайт доступен на `https://stakes-com-mx.<аккаунт>.workers.dev`. Чтобы подключить домен, добавьте зону stakes.com.mx в Cloudflare и раскомментируйте `routes` в `wrangler.toml`: только `stakes.com.mx/*` и `www.stakes.com.mx/*`. Поддомен `scm.stakes.com.mx` (партнёрские ссылки) в маршруты не добавлять.
 
 ## Шорткоды в контенте
 

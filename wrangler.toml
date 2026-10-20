@@ -1,0 +1,20 @@
+# Cloudflare Workers со статическими файлами: весь сайт — папка public/ (собирается build.py).
+# Деплой:  npm run deploy   (= python3 build.py && npx wrangler deploy)
+# Первый раз: npx wrangler login
+name = "stakes-com-mx"
+compatibility_date = "2026-10-01"
+
+# Адрес для проверки до подключения домена: https://stakes-com-mx.<аккаунт>.workers.dev
+workers_dev = true
+
+# Подключение домена: раскомментировать после того, как зона stakes.com.mx добавлена в Cloudflare.
+# Только эти два хоста. Никогда не *.stakes.com.mx/* — поддомен scm.stakes.com.mx (партнёрские ссылки) должен остаться нетронутым.
+# routes = [
+#   { pattern = "stakes.com.mx/*", zone_name = "stakes.com.mx" },
+#   { pattern = "www.stakes.com.mx/*", zone_name = "stakes.com.mx" },
+# ]
+
+[assets]
+directory = "public"
+not_found_handling = "404-page"
+html_handling = "auto-trailing-slash"
