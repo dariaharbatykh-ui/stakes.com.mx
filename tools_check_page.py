@@ -20,8 +20,9 @@ for bad in ("stake.mx", "stake.com", "sitio oficial", "oficial", "help.stake", "
 h2 = re.findall(r'<h2 id="[^"]+"(?: data-tab="[^"]+")?>', body)
 if len(h2) < 6: errs.append(f"only {len(h2)} h2 sections")
 if re.search(r"<h1", body): errs.append("h1 in body (h1 comes from JSON)")
-cta = len(re.findall(r"\{\{cta(box)?:", body)) + (1 if meta.get("offer") else 0) + len(meta.get("hero_buttons", []))
-if cta > 4: errs.append(f"{cta} partner buttons > 4")
+# Первый экран всегда даёт 2 кнопки (регистрация + приложение); здесь считаются кнопки в тексте и offer
+cta = len(re.findall(r"\{\{cta(box)?:", body)) + (1 if meta.get("offer") else 0)
+if cta > 3: errs.append(f"{cta} partner buttons in body+offer > 3")
 if "{{" in re.sub(r"\{\{(cta|ctabox|games|topgames|art|icon|phones):[^}]*\}\}|\{\{topgames\}\}|\{\{updated\}\}", "", body): errs.append("unknown shortcode")
 if 'class="faq"' not in body: errs.append("no FAQ section")
 links = re.findall(r'href="(/[^"#]*)"', body)

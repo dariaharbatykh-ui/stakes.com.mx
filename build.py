@@ -603,13 +603,12 @@ def _page_html(slug, meta, body):
             hero_side = (f'<figure class="hero-art"><img src="/assets/img/hero/{slug}.webp" width="1024" height="1024" '
                          f'fetchpriority="high" alt="{esc(alt)}"></figure>')
 
-    actions = ""
-    if meta.get("hero_buttons"):
-        btns = []
-        for i, b in enumerate(meta["hero_buttons"]):
-            text, _, link = b.partition("|")
-            btns.append(cta(text, "" if i == 0 else "ghost", link or "reg"))
-        actions = '<div class="hero-actions">' + "".join(btns) + "</div>"
+    # Первый экран каждой страницы: регистрация + скачать приложение (партнёрские ссылки)
+    reg_btn = cta("Registrarse en Stake", "", "reg")
+    app_btn = cta("Descargar la app", "ghost", "app")
+    btns = [app_btn.replace('class="btn btn-ghost"', 'class="btn"'), reg_btn.replace('class="btn"', 'class="btn btn-ghost"')] \
+        if slug == "app" else [reg_btn, app_btn]
+    actions = '<div class="hero-actions">' + "".join(btns) + "</div>"
 
     meta_line = ""
     if kind != "legal":
