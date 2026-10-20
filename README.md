@@ -8,7 +8,7 @@
 |---|---|
 | `src/pages/*.html` | контент страниц; сверху JSON с метаданными (`title`, `description`, `h1`, `lead`, `offer`, `type`) |
 | `src/assets/` | `style.css`, `site.js` (мобильное меню), `favicon.svg` |
-| `build.py` | собирает `public/`: шапка, меню, футер, хлебные крошки, оглавление, schema.org, `sitemap.xml`, `robots.txt`, `/go/stake/`; проверяет длину title ≤ 60 и description ≤ 160 и дубли |
+| `build.py` | собирает `public/`: шапка, меню, футер, хлебные крошки, оглавление, schema.org, `sitemap.xml`, `robots.txt`; проверяет длину title ≤ 60 и description ≤ 160 и дубли |
 | `public/` | готовый сайт, можно выкладывать как есть |
 | `facts.md` | база фактов о бренде с официального сайта и источниками |
 | `serve.mjs` | локальный сервер |
@@ -27,14 +27,18 @@ node serve.mjs 8080
 
 ## Шорткоды в контенте
 
-- `{{cta:Текст|green}}` — партнёрская кнопка (`/go/stake/`, `target="_blank"`, `rel="nofollow sponsored"`)
-- `{{ctabox:Заголовок|Подпись|Кнопка}}` — блок с кнопкой
+- `{{cta:Текст|green|app}}` — партнёрская кнопка (`target="_blank"`, `rel="nofollow sponsored"`); последний параметр `reg` (по умолчанию) или `app`
+- `{{ctabox:Заголовок|Подпись|Кнопка|app}}` — блок с кнопкой
+- в JSON-шапке: `"hero_buttons": ["Текст|app", ...]`, `"offer": {"link": "app"}`
 - `{{games:Игра/Провайдер;...}}` — плитки игр
 - `{{updated}}` — дата обновления
 
 ## Партнёрская ссылка
 
-Все кнопки ведут на `/go/stake/` (noindex, закрыт в robots.txt). Сейчас редирект на `https://stake.mx/`. Чтобы поставить реальную ссылку, замените `AFF_URL` в `build.py` и пересоберите сайт.
+Ссылки задаются в `AFF` в `build.py`:
+
+- `reg` — регистрация: `https://scm.stakes.com.mx/?top=playeer` (все кнопки по умолчанию, шапка, плавающая кнопка на мобильном);
+- `app` — приложение: `https://scm.stakes.com.mx/?top=playeer&max` (вторая кнопка на главной, первая кнопка и блок Android на `/app/`).
 
 ## Страницы
 

@@ -19,9 +19,11 @@ SITE = "https://stakes.com.mx"
 SITE_NAME = "Stakes.com.mx"
 UPDATED_ISO = "2026-10-20"
 UPDATED_TXT = "20 de octubre de 2026"
-# Партнёрская ссылка: заменить на реальную, когда она будет.
-AFF_URL = "https://stake.mx/"
-GO = "/go/stake/"
+# Партнёрские ссылки: регистрация и приложение.
+AFF = {
+    "reg": "https://scm.stakes.com.mx/?top=playeer",
+    "app": "https://scm.stakes.com.mx/?top=playeer&max",
+}
 
 NAV = [
     ("/", "Inicio"),
@@ -66,23 +68,25 @@ def esc(s):
     return html.escape(s, quote=True)
 
 
-def cta(text, style=""):
+def cta(text, style="", link="reg"):
     cls = "btn" + (" btn-" + style if style else "")
-    return (f'<a class="{cls}" href="{GO}" target="_blank" '
+    return (f'<a class="{cls}" href="{esc(AFF[link])}" target="_blank" '
             f'rel="nofollow sponsored">{esc(text)}</a>')
 
 
 def expand(body):
-    """Шорткоды: {{cta:Текст|green}}, {{ctabox:Заголовок|Подпись|Кнопка}},
+    """Шорткоды: {{cta:Текст|green|app}}, {{ctabox:Заголовок|Подпись|Кнопка|app}},
+    последний параметр — тип ссылки: reg (по умолчанию) или app;
     {{games:Название/Провайдер;...}}, {{updated}}."""
     def _cta(m):
         parts = m.group(1).split("|")
-        return cta(parts[0], parts[1] if len(parts) > 1 else "")
+        return cta(parts[0], parts[1] if len(parts) > 1 else "",
+                   parts[2] if len(parts) > 2 else "reg")
 
     def _box(m):
-        head, sub, btn = (m.group(1).split("|") + ["", "", ""])[:3]
+        head, sub, btn, link = (m.group(1).split("|") + ["", "", "", ""])[:4]
         return (f'<div class="cta-box"><p>{esc(head)}<small>{esc(sub)}</small></p>'
-                f'{cta(btn, "green")}</div>')
+                f'{cta(btn, "green", link or "reg")}</div>')
 
     def _games(m):
         items = [g.strip() for g in m.group(1).split(";") if g.strip()]
@@ -143,14 +147,19 @@ def links(items):
     return "".join(f'<li><a href="{h}">{t}</a></li>' for h, t in items)
 
 
-def header(current):
+def header(current, with_cta=True):
+    head_cta = ""
+    if with_cta:
+        head_cta = ('<div class="header-cta">'
+                    + cta("Ir a Stake.mx", "green").replace('class="btn btn-green"', 'class="btn btn-green btn-sm"')
+                    + "</div>")
     return f'''<a class="skip" href="#main">Saltar al contenido</a>
 <header class="site-header">
   <div class="wrap">
     <a class="logo" href="/" aria-label="{SITE_NAME} inicio"><span class="logo-mark" aria-hidden="true">S</span>Stakes<small>.com.mx</small></a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav">Menú</button>
     <nav class="nav" id="nav" aria-label="Principal"><ul>{nav_html(current)}</ul></nav>
-    <div class="header-cta">{cta("Ir a Stake.mx", "green").replace('class="btn btn-green"', 'class="btn btn-green btn-sm"')}</div>
+    {head_cta}
   </div>
 </header>'''
 
@@ -226,14 +235,15 @@ def page_html(slug, meta, body):
         lis = "".join(f"<li>{esc(x)}</li>" for x in o["points"])
         hero_side = (f'<aside class="offer-card"><span class="tag">{esc(o["tag"])}</span>'
                      f'<div class="big">{esc(o["title"])}</div><ul>{lis}</ul>'
-                     f'{cta(o["button"], "green")}'
+                     f'{cta(o["button"], "green", o.get("link", "reg"))}'
                      f'<p class="fine">18+ · Aplican términos y condiciones de Stake.mx · Juega con responsabilidad</p></aside>')
 
     actions = ""
     if meta.get("hero_buttons"):
         btns = []
         for i, b in enumerate(meta["hero_buttons"]):
-            btns.append(cta(b, "green" if i == 0 else "ghost"))
+            text, _, link = b.partition("|")
+            btns.append(cta(text, "green" if i == 0 else "ghost", link or "reg"))
         actions = '<div class="hero-actions">' + "".join(btns) + "</div>"
 
     meta_line = ""
@@ -301,7 +311,7 @@ def page_html(slug, meta, body):
 <script type="application/ld+json">{ld}</script>
 </head>
 <body{body_cls}>
-{header(url)}
+{header(url, kind == "commercial")}
 <main id="main">
 {hero}
 <div class="{page_cls}">
@@ -366,24 +376,12 @@ def main():
             sitemap.append(f"  <url><loc>{SITE}{url_of(slug)}</loc><lastmod>{UPDATED_ISO}</lastmod><priority>{prio}</priority></url>")
         print(f"{url_of(slug):34} T({len(t)}) D({len(d)})")
 
-    # Редирект на партнёрскую ссылку
-    go = OUT / "go" / "stake"
-    go.mkdir(parents=True)
-    go.joinpath("index.html").write_text(
-        f'<!doctype html><html lang="es-MX"><head><meta charset="utf-8">'
-        f'<meta name="robots" content="noindex, nofollow">'
-        f'<meta http-equiv="refresh" content="0;url={AFF_URL}">'
-        f'<title>Redirigiendo a Stake.mx</title></head><body>'
-        f'<p>Redirigiendo a <a href="{AFF_URL}" rel="nofollow sponsored">Stake.mx</a>…</p>'
-        f'<script>location.replace({json.dumps(AFF_URL)})</script></body></html>',
-        encoding="utf-8")
-
     (OUT / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + "\n".join(sitemap) + "\n</urlset>\n", encoding="utf-8")
     (OUT / "robots.txt").write_text(
-        f"User-agent: *\nAllow: /\nDisallow: /go/\n\nSitemap: {SITE}/sitemap.xml\n",
+        f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n",
         encoding="utf-8")
 
     if errors:
