@@ -149,11 +149,8 @@ body.menu-open { overflow: hidden; }
 
 /* Контент */
 .page { max-width: 1200px; margin: 0 auto; padding: 28px 24px 64px; }
-/* Одна ширина для всего сайта: шапка, первый экран и контент — контейнер 1200px.
-   Блоки (таблицы, карточки, инструкции, игры) занимают всю ширину; абзацы — до 860px для удобства чтения. */
+/* Одна ширина для всего сайта: шапка, первый экран и весь контент — контейнер 1200px. */
 .content { max-width: none; }
-.content > p, .content > section > p, .content > section > ul:not(.chips), .content > section > ol:not(.steps),
-.content .steps, .content .note, .content > section > h3 + p { max-width: 860px; }
 .content > section:first-child > h2:first-child { margin-top: 0; }
 @media (max-width: 1000px) { .page { padding: 24px 16px 96px; } }
 
@@ -166,7 +163,7 @@ td { color: var(--text-2); }
 td:first-child { color: #fff; font-weight: 700; }
 .facts td:first-child { width: 38%; }
 
-.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin: 0 0 1.4em; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 0 0 1.4em; }
 .card { background: var(--bg-2); border-radius: var(--r); padding: 16px; box-shadow: var(--shadow); }
 .card h3 { margin: 0 0 6px; font-size: 1rem; }
 .card p { margin: 0; color: var(--text-2); font-size: .9rem; }
@@ -175,7 +172,7 @@ a.card { text-decoration: none; color: inherit; transition: transform .15s, back
 a.card:hover { transform: translateY(-3px); background: var(--bg-3); }
 
 /* Плитки игр */
-.games { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px 10px; margin-bottom: 1.6em; }
+.games { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px 10px; margin-bottom: 1.6em; }
 .game { display: flex; flex-direction: column; gap: 6px; }
 .game .art { position: relative; aspect-ratio: 3/4; border-radius: var(--r); overflow: hidden; padding: 12px; display: flex; align-items: flex-end; background: linear-gradient(160deg, var(--g1, #1475e1), var(--g2, #0f212e)); box-shadow: var(--shadow); transition: transform .2s; }
 .game .art::before { content: ""; position: absolute; width: 140%; aspect-ratio: 1; border-radius: 50%; right: -60%; top: -45%; background: rgba(255,255,255,.1); }
@@ -200,14 +197,6 @@ a.card:hover { transform: translateY(-3px); background: var(--bg-3); }
 .cta-box p { margin: 0; font-weight: 800; color: #fff; font-size: 1.05rem; }
 .cta-box small { display: block; font-weight: 600; color: var(--text-2); font-size: .85rem; }
 
-.rating { display: flex; align-items: center; gap: 20px; background: var(--bg-2); border-radius: var(--r); padding: 18px; margin-bottom: 1.2em; flex-wrap: wrap; box-shadow: var(--shadow); }
-.rating .score { font-size: 2.6rem; font-weight: 800; color: #fff; line-height: 1; }
-.rating .score small { font-size: 1rem; color: var(--text-3); }
-.bars { flex: 1; min-width: 220px; display: grid; gap: 8px; }
-.bar { display: grid; grid-template-columns: 150px 1fr 34px; align-items: center; gap: 10px; font-size: .86rem; font-weight: 600; color: var(--text-2); }
-.bar i { display: block; height: 8px; border-radius: 4px; background: var(--bg-0); overflow: hidden; }
-.bar i b { display: block; height: 100%; background: var(--green); border-radius: 4px; }
-@media (max-width: 480px) { .bar { grid-template-columns: 120px 1fr 30px; } }
 
 .faq details { background: var(--bg-2); border-radius: var(--r); margin-bottom: 8px; box-shadow: var(--shadow); }
 .faq summary { cursor: pointer; padding: 14px 44px 14px 16px; font-weight: 700; color: #fff; list-style: none; position: relative; }
@@ -255,7 +244,7 @@ a.card:hover { transform: translateY(-3px); background: var(--bg-3); }
 .e404 .code { font-size: 5rem; font-weight: 800; color: var(--blue); line-height: 1; }
 
 /* Топ-игры */
-.top-games { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 12px; margin: 0 0 .8em; }
+.top-games { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 12px; margin: 0 0 .8em; }
 .tg { display: grid; grid-template-columns: 84px 1fr; gap: 12px; background: var(--bg-2); border-radius: var(--r); padding: 10px; box-shadow: var(--shadow); }
 .tg .art { position: relative; aspect-ratio: 3/4; border-radius: var(--r-sm); overflow: hidden; padding: 8px; display: flex; align-items: flex-end; background: linear-gradient(160deg, var(--g1), var(--g2)); }
 .tg .art::before { content: ""; position: absolute; width: 140%; aspect-ratio: 1; border-radius: 50%; right: -60%; top: -45%; background: rgba(255,255,255,.12); }
@@ -271,7 +260,7 @@ a.card:hover { transform: translateY(-3px); background: var(--bg-3); }
 .fine-print { font-size: .8rem; color: var(--text-3); margin-bottom: 1.6em; }
 
 /* Пошаговые инструкции */
-.howto { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; margin: 0 0 1.4em; }
+.howto { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin: 0 0 1.4em; }
 .howto-card { background: var(--bg-2); border-radius: var(--r); padding: 16px 18px; box-shadow: var(--shadow); display: flex; flex-direction: column; }
 .howto-card h3 { margin: 0 0 12px; font-size: 1.02rem; display: flex; align-items: center; gap: 10px; }
 .howto-card h3 .ico { width: 22px; height: 22px; color: var(--blue-h); }
@@ -308,14 +297,46 @@ a.card:hover { transform: translateY(-3px); background: var(--bg-3); }
 .tg .art.has-img .rank { z-index: 1; }
 
 /* Скриншоты приложения в рамке телефона */
-.phones { display: grid; grid-template-columns: repeat(3, minmax(0, 260px)); gap: 20px; margin: 4px 0 1.6em; }
-.phones.single { grid-template-columns: minmax(0, 240px); }
+.phones { display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); gap: 20px; margin: 4px 0 1.6em; }
+.phones .phone { width: 100%; max-width: 280px; justify-self: center; }
+.phones:not(.single) .phone:first-child { justify-self: start; }
+.phones:not(.single) .phone:last-child { justify-self: end; }
+.phones.single { grid-template-columns: minmax(0, 1fr); }
+.phones.single .phone { max-width: 240px; justify-self: start; }
 .phone { margin: 0; }
 .phone-frame { position: relative; border-radius: 28px; padding: 8px; background: #0b1720; box-shadow: 0 0 0 2px var(--bg-3), 0 12px 30px rgba(0,0,0,.45); }
 .phone-frame img { width: 100%; height: auto; border-radius: 21px; display: block; }
 .phone figcaption { text-align: center; margin-top: 10px; font-size: .86rem; font-weight: 700; color: var(--text-2); }
 @media (max-width: 700px) {
-  .phones { grid-template-columns: repeat(3, 72%); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; }
+  .phones { grid-template-columns: repeat(var(--n, 3), 72%); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; }
   .phones .phone { scroll-snap-align: start; }
   .phones.single { grid-template-columns: minmax(0, 220px); }
 }
+
+/* Раздел с одним скриншотом: текст слева, телефон справа — раздел занимает всю ширину */
+@media (min-width: 701px) {
+  .content section:has(> .phones.single) { display: grid; grid-template-columns: minmax(0, 1fr) 240px; column-gap: 40px; align-items: start; }
+  .content section:has(> .phones.single) > * { grid-column: 1; }
+  .content section:has(> .phones.single) > h2 { grid-column: 1 / -1; }
+  .content section:has(> .phones.single) > .phones.single { grid-column: 2; grid-row: 2 / span 6; margin: 0; }
+  .content section:has(> .phones.single) .phones.single .phone { max-width: none; }
+}
+
+/* Блок с кнопкой на телефоне: текст и кнопка на всю ширину */
+@media (max-width: 600px) {
+  .cta-box p, .cta-box .btn { width: 100%; }
+}
+
+/* Одна инструкция в разделе: шаги в ряд на всю ширину */
+.howto.single { grid-template-columns: 1fr; }
+.howto.single .howto-card ol { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px 20px; margin-bottom: 0; }
+.howto.single .howto-card li { margin-bottom: 0; }
+
+/* Соцсети в футере */
+.social { margin-top: 28px; }
+.social ul { list-style: none; margin: 0; padding: 0; display: flex; justify-content: center; gap: 10px; }
+.social li { margin: 0; }
+.social a { display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--r); background: var(--bg-2); color: var(--text-2); transition: background .15s, color .15s; }
+.social a:hover { background: var(--bg-3); color: #fff; }
+.social .ico { width: 20px; height: 20px; }
+.site-footer .social + .disclaimer { margin-top: 20px; }

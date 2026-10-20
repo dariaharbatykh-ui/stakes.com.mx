@@ -51,9 +51,9 @@ def icon(name):
 
 SIDE_MAIN = [
     ("/", "Inicio", "home"),
+    ("/app/", "Stake app", "phone"),
     ("/registro/", "Registro", "user"),
     ("/iniciar-sesion/", "Iniciar sesión", "key"),
-    ("/app/", "Stake app", "phone"),
     ("/bono-de-bienvenida/", "Bonos y promociones", "gift"),
     ("/codigo-promocional/", "Código promocional", "ticket"),
     ("/metodos-de-pago/", "Depósitos y retiros", "card"),
@@ -71,9 +71,9 @@ BOTTOM_NAV = [
 ]
 
 FOOTER_GUIDES = [
+    ("/app/", "Stake app"),
     ("/registro/", "Registro en Stake"),
     ("/iniciar-sesion/", "Iniciar sesión"),
-    ("/app/", "Stake app"),
     ("/bono-de-bienvenida/", "Bonos y promociones"),
     ("/codigo-promocional/", "Código promocional"),
     ("/metodos-de-pago/", "Depósitos y retiros"),
@@ -214,6 +214,8 @@ PHONES = {
     "home": ("Inicio de Stake en el celular", "Pantalla de inicio de Stake México en el navegador del celular"),
     "casino": ("Casino de Stake en el móvil", "Casino de Stake México en el celular con Originales y slots"),
     "sports": ("Apuestas deportivas en el móvil", "Sportsbook de Stake México en el celular con momios en pesos"),
+    "live": ("Casino en vivo en el móvil", "Casino en vivo de Stake México en el celular con blackjack, ruleta y baccarat"),
+    "promos": ("Promociones en el móvil", "Promociones de Stake México en el celular"),
 }
 
 
@@ -225,7 +227,7 @@ def phones_html(keys):
                     f'<img src="/assets/img/app/stake-movil-{k}.jpg" width="517" height="1120" loading="lazy" decoding="async" alt="{esc(alt)}">'
                     f'</div><figcaption>{esc(cap)}</figcaption></figure>')
     cls = "phones" + (" single" if len(figs) == 1 else "")
-    return f'<div class="{cls}">' + "".join(figs) + "</div>"
+    return f'<div class="{cls}" style="--n:{len(figs)}">' + "".join(figs) + "</div>"
 
 
 def top_games_html():
@@ -372,6 +374,27 @@ def bottom_nav(current):
     return '<nav class="bottom-nav" aria-label="Navegación rápida"><ul>' + "".join(items) + "</ul></nav>"
 
 
+# Соцсети Stake México — ссылки из футера stake.mx (20.10.2026)
+SOCIAL = [
+    ("X", "https://x.com/stake_mexico",
+     '<path fill="currentColor" stroke="none" d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.77zm-1.08 16.17h1.7L7.4 4.74H5.58z"/>'),
+    ("Instagram", "https://www.instagram.com/stake.mexico/",
+     '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>'),
+    ("TikTok", "https://www.tiktok.com/@stakemexico",
+     '<path fill="currentColor" stroke="none" d="M16.6 2h-3.3v13.2a2.9 2.9 0 1 1-2.9-2.9c.3 0 .6 0 .9.1V9a6.3 6.3 0 1 0 5.3 6.2V8.4a7.6 7.6 0 0 0 4.4 1.4V6.5a4.4 4.4 0 0 1-4.4-4.5z"/>'),
+    ("Telegram", "https://t.me/stakemxsocial",
+     '<path fill="currentColor" stroke="none" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.6 6.8-1.6 7.7c-.1.6-.5.7-1 .4l-2.6-1.9-1.3 1.2c-.1.1-.3.3-.6.3l.2-2.6 4.8-4.3c.2-.2 0-.3-.3-.1l-5.9 3.7-2.5-.8c-.6-.2-.6-.6.1-.8l9.8-3.8c.5-.2.9.1.9 1z"/>'),
+]
+
+
+def social_html():
+    items = "".join(
+        f'<li><a href="{url}" target="_blank" rel="nofollow noopener" aria-label="Stake México en {name}">'
+        f'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">{path}</svg></a></li>'
+        for name, url, path in SOCIAL)
+    return f'<nav class="social" aria-label="Redes sociales de Stake México"><ul>{items}</ul></nav>'
+
+
 def footer():
     return f'''<footer class="site-footer">
   <div class="wrap">
@@ -385,6 +408,7 @@ def footer():
       <div><h2>Sitio</h2><ul>{links(FOOTER_SITE)}</ul></div>
       <div><h2>Legal</h2><ul>{links(FOOTER_LEGAL)}</ul></div>
     </div>
+    {social_html()}
     <div class="disclaimer">
       <p>{SITE_NAME} es un sitio informativo independiente sobre Stake: no opera juegos ni acepta apuestas o pagos. Algunos enlaces son de afiliado: si te registras a través de ellos, el sitio puede recibir una comisión sin costo para ti.</p>
       <p>Stake en México es operado por Producciones Móviles S.A. de C.V., titular del permiso DGAJS/SCEVF/P-06/2005-TER expedido por la Secretaría de Gobernación, en unión de Unocapali La Paz Operadora, S.A. de C.V. Solo para mayores de 18 años. Juega con responsabilidad: si el juego deja de ser diversión, llama a la Línea de la Vida 800 911 2000.</p>
