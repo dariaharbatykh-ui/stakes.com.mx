@@ -285,7 +285,7 @@ def page_html(slug, meta, body):
         "inLanguage": "es-MX",
         "dateModified": UPDATED_ISO,
         "datePublished": UPDATED_ISO,
-        "author": {"@type": "Organization", "name": "Equipo editorial " + SITE_NAME, "url": SITE + "/sobre-nosotros/"},
+        "author": {"@type": "Organization", "name": SITE_NAME, "url": SITE + "/"},
         "publisher": {"@type": "Organization", "name": SITE_NAME, "url": SITE + "/"},
     })
     fs = faq_schema(body)
@@ -316,7 +316,7 @@ def page_html(slug, meta, body):
     meta_line = ""
     if kind != "legal":
         meta_line = (f'<div class="meta-line"><span>Actualizado: <time datetime="{UPDATED_ISO}">{UPDATED_TXT}</time></span>'
-                     f'<span>Por: Equipo editorial {SITE_NAME}</span></div>')
+                     f'</div>')
     else:
         meta_line = f'<div class="meta-line"><span>Última actualización: <time datetime="{UPDATED_ISO}">{UPDATED_TXT}</time></span></div>'
 
@@ -338,12 +338,6 @@ def page_html(slug, meta, body):
 
     toc = toc_from(body) if kind != "legal" else ""
     page_cls = "page" + (" narrow" if kind != "commercial" else "")
-    author = ""
-    if kind != "legal":
-        author = (f'<div class="author"><div class="avatar" aria-hidden="true">S</div><div>'
-                  f'<strong>Equipo editorial {SITE_NAME}</strong>'
-                  f'<p>Cada dato sobre Stake se revisa antes de publicarse. '
-                  f'Última revisión: {UPDATED_TXT}. <a href="/sobre-nosotros/">Cómo trabajamos</a>.</p></div></div>')
 
     robots = meta.get("robots", "index, follow, max-image-preview:large")
     og_type = "website" if slug == "index" else "article"
@@ -383,7 +377,6 @@ def page_html(slug, meta, body):
 <div class="{page_cls}">
   <article class="content{' legal' if kind == 'legal' else ''}">
 {body}
-{author}
   </article>
 </div>
 </main>
