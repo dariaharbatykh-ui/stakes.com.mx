@@ -393,3 +393,34 @@ a.card:hover { transform: translateY(-3px); background: var(--bg-3); }
 .howto-card ul > li { position: relative; padding-left: 20px; margin-bottom: 10px; font-size: .92rem; }
 .howto-card ul > li::before { content: ""; position: absolute; left: 4px; top: .62em; width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
 .e404 > p:last-child { margin-bottom: 0; }
+
+/* ===== Мобильная версия ===== */
+@media (max-width: 600px) {
+  /* Зоны нажатия не меньше 44px */
+  .burger { padding: 11px; }
+  .topbar .logo, .site-footer .logo { min-height: 44px; }
+  td, th { overflow-wrap: anywhere; }
+  .top-actions .btn-sm { min-height: 44px; padding: 10px 14px; }
+  .crumbs a { display: inline-block; padding: 12px 0; }
+  .crumbs { margin-bottom: 4px; }
+  .hero { padding-top: 12px; }
+  /* Кнопки первого экрана — во всю ширину */
+  .hero-actions { display: grid; grid-template-columns: 1fr; }
+  .hero-actions .btn { width: 100%; min-height: 48px; }
+  /* Шрифт не меньше 12px */
+  .card .kicker, .offer-card .tag, .tg dt, .tg .rank, .side-title { font-size: .75rem; }
+  .bottom-nav a, .bottom-nav button { font-size: .75rem; min-height: 56px; }
+  /* Таблицы из 3+ колонок — карточками */
+  table.stack thead { display: none; }
+  table.stack, table.stack tbody, table.stack tr, table.stack td, table.stack th { display: block; width: auto; }
+  table.stack tr { padding: 12px 14px; border-bottom: 1px solid var(--bg-3); }
+  table.stack tbody tr:nth-child(even) > * { background: transparent; }
+  table.stack tbody tr:nth-child(even) { background: var(--bg-2); }
+  table.stack td, table.stack th { padding: 4px 0; border: 0; }
+  table.stack th[scope="row"] { font-size: 1rem; padding-bottom: 6px; }
+  table.stack td { display: grid; grid-template-columns: minmax(96px, 40%) 1fr; gap: 10px; align-items: baseline; }
+  table.stack td::before { content: attr(data-label); font-size: .75rem; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .03em; }
+  table.stack td[data-label=""] { display: block; }
+  table.stack td[data-label=""]::before { display: none; }
+  .facts tbody th { width: 42%; }
+}

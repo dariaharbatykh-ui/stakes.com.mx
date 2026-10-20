@@ -394,10 +394,26 @@ def expand(body):
             else:
                 r = re.sub(r"^<tr><td>(.*?)</td>", r'<tr><th scope="row">\1</th>', r, flags=re.S)
             fixed.append(r)
+        cls_extra = ""
         if head:
+            labels = [strip_tags(x) for x in re.findall(r"<th>(.*?)</th>", head, re.S)]
             head = head.replace("<th>", '<th scope="col">')
+            if len(labels) >= 3:   # на телефоне такие таблицы показываются карточками
+                cls_extra = " stack"
+                def _label(row):
+                    cells = re.findall(r"<(td|th)([^>]*)>(.*?)</\1>", row, re.S)
+                    out = "<tr>"
+                    for k, (tag, attrs, inner_html) in enumerate(cells):
+                        lab = labels[k] if k < len(labels) else ""
+                        out += f'<{tag}{attrs} data-label="{esc(lab)}">{inner_html}</{tag}>'
+                    return out + "</tr>"
+                fixed = [_label(r) for r in fixed]
         inner = (f"<thead>{head}</thead>" if head else "") + "<tbody>" + "".join(fixed) + "</tbody>"
-        return f"{m.group(1)}{inner}</table>"
+        open_tag = m.group(1)
+        if cls_extra:
+            open_tag = (open_tag.replace('class="', 'class="' + cls_extra.strip() + ' ', 1)
+                        if 'class="' in open_tag else open_tag.replace("<table", f'<table class="{cls_extra.strip()}"', 1))
+        return f"{open_tag}{inner}</table>"
     body = re.sub(r"(<table[^>]*>)(.*?)</table>", _table, body, flags=re.S)
     # Шаги: пробел между заголовком шага и описанием (иначе текст слипается без CSS)
     body = re.sub(r'<ol class="steps">.*?</ol>', lambda m: m.group(0).replace("</strong>", "</strong> "), body, flags=re.S)
