@@ -41,7 +41,7 @@ h3 { font-size: 1.1rem; margin-top: 1.6em; font-weight: 700; }
 p, ul, ol { margin: 0 0 1em; }
 ul, ol { padding-left: 1.3em; }
 li { margin-bottom: .35em; }
-strong { color: var(--text); font-weight: 700; }
+strong, b { color: var(--text); font-weight: 700; }
 .ico { width: 18px; height: 18px; flex-shrink: 0; }
 .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 .skip { position: absolute; left: -9999px; }
@@ -51,7 +51,7 @@ strong { color: var(--text); font-weight: 700; }
 /* Логотип */
 .logo { display: inline-flex; align-items: center; gap: 8px; color: #fff; text-decoration: none; font-weight: 800; font-size: 1.2rem; white-space: nowrap; }
 .logo-mark { width: 30px; height: 30px; border-radius: var(--r); background: var(--blue); display: grid; place-items: center; font-size: 1rem; box-shadow: var(--shadow); }
-.logo small { color: var(--text-3); font-weight: 700; font-size: .8em; }
+.logo .logo-tld { color: var(--text-3); font-weight: 700; font-size: .8em; }
 
 /* Сайдбар */
 .sidebar { position: fixed; inset: 0 auto 0 0; width: var(--side); background: var(--bg-0); z-index: 60; overflow-y: auto; padding: 0 12px 24px; box-shadow: 4px 0 16px rgba(0,0,0,.35); transform: translateX(-100%); visibility: hidden; transition: transform .2s ease, visibility 0s .2s; scrollbar-width: thin; scrollbar-color: var(--bg-3) transparent; }
@@ -97,7 +97,7 @@ body.menu-open { overflow: hidden; }
 }
 @media (max-width: 560px) {
   .top-actions .hide-xs { display: none; }
-  .topbar .logo small { display: none; }
+  .topbar .logo .logo-tld { display: none; }
   .topbar-in { gap: 8px; }
 }
 
@@ -158,10 +158,11 @@ body.menu-open { overflow: hidden; }
 table { width: 100%; border-collapse: collapse; font-size: .93rem; }
 th, td { padding: 12px 16px; text-align: left; vertical-align: top; }
 th { color: var(--text-2); font-weight: 700; font-size: .85rem; }
-tr:nth-child(even) td { background: var(--bg-2); }
+tbody tr:nth-child(even) > * { background: var(--bg-2); }
+th[scope="row"] { color: #fff; font-weight: 700; font-size: inherit; }
 td { color: var(--text-2); }
 td:first-child { color: #fff; font-weight: 700; }
-.facts td:first-child { width: 38%; }
+.facts tbody th { width: 38%; }
 
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 0 0 1.4em; }
 .card { background: var(--bg-2); border-radius: var(--r); padding: 16px; box-shadow: var(--shadow); }
@@ -194,8 +195,8 @@ a.card:hover { transform: translateY(-3px); background: var(--bg-3); }
 .note p:last-child { margin: 0; }
 
 .cta-box { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; background: linear-gradient(110deg, #123f6e, var(--bg-2) 70%); border-radius: var(--r-lg); padding: 18px 20px; margin: 1.6em 0; box-shadow: var(--shadow); }
-.cta-box p { margin: 0; font-weight: 800; color: #fff; font-size: 1.05rem; }
-.cta-box small { display: block; font-weight: 600; color: var(--text-2); font-size: .85rem; }
+.cta-box .cta-title { margin: 0; font-weight: 800; color: #fff; font-size: 1.05rem; }
+.cta-box .cta-sub { margin: 2px 0 0; font-weight: 600; color: var(--text-2); font-size: .85rem; }
 
 
 .faq details { background: var(--bg-2); border-radius: var(--r); margin-bottom: 8px; box-shadow: var(--shadow); }
@@ -325,7 +326,7 @@ a.card:hover { transform: translateY(-3px); background: var(--bg-3); }
 
 /* Блок с кнопкой на телефоне: текст и кнопка на всю ширину */
 @media (max-width: 600px) {
-  .cta-box p, .cta-box .btn { width: 100%; }
+  .cta-box .cta-text, .cta-box .btn { width: 100%; }
 }
 
 /* Одна инструкция в разделе: шаги в ряд на всю ширину */
@@ -386,3 +387,9 @@ a.card:hover { transform: translateY(-3px); background: var(--bg-3); }
 @media (max-width: 700px) {
   .content > section { margin-top: 56px; }
 }
+
+/* Маркированные списки в карточках инструкций */
+.howto-card ul { list-style: none; padding: 0; margin: 0 0 12px; flex: 1; }
+.howto-card ul > li { position: relative; padding-left: 20px; margin-bottom: 10px; font-size: .92rem; }
+.howto-card ul > li::before { content: ""; position: absolute; left: 4px; top: .62em; width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+.e404 > p:last-child { margin-bottom: 0; }

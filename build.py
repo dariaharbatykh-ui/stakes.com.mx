@@ -201,7 +201,7 @@ def tc_html(fragment):
 def headings_tc(doc):
     doc = re.sub(r"(<(h[1-3])\b[^>]*>)(.*?)(</\2>)", lambda m: m.group(1) + tc_html(m.group(3)) + m.group(4), doc, flags=re.S)
     doc = re.sub(r'(<div class="big">)(.*?)(</div>)', lambda m: m.group(1) + tc_html(m.group(2)) + m.group(3), doc)
-    doc = re.sub(r'(<div class="cta-box"><p>)(.*?)(<small>)', lambda m: m.group(1) + tc_html(m.group(2)) + m.group(3), doc)
+    doc = re.sub(r'(<p class="cta-title">)(.*?)(</p>)', lambda m: m.group(1) + tc_html(m.group(2)) + m.group(3), doc)
     doc = re.sub(r'(<nav class="tabs".*?</nav>)', lambda m: re.sub(r'(<a href="#[^"]+">)(.*?)(</a>)', lambda a: a.group(1) + tc_html(a.group(2)) + a.group(3), m.group(1)), doc, flags=re.S)
     return doc
 
@@ -235,13 +235,13 @@ def slugify(text):
     return re.sub(r"[^a-z0-9]+", "-", t).strip("-")
 
 
-def game_img(name, prov, w=180, h=236):
+def game_img(name, prov, w=180, h=236, alt=None):
     """<img> превью игры, если файл есть в src/assets/img/games/<slug>.webp."""
     slug = slugify(name)
     if not (SRC / "assets" / "img" / "games" / f"{slug}.webp").exists():
         return ""
     return (f'<img src="/assets/img/games/{slug}.webp" width="{w}" height="{h}" loading="lazy" decoding="async" '
-            f'alt="{esc(name)} de {esc(prov)} en Stake">')
+            f'alt="{esc(name if alt is None else alt)}">')
 
 
 PHONES = {
@@ -332,9 +332,10 @@ def top_games_html():
     out = []
     for i, (name, prov, kind, rtp, vol, mx) in enumerate(TOP_GAMES):
         c1, c2 = GAME_COLORS[i % len(GAME_COLORS)]
+        img = game_img(name, prov, alt="")
         out.append(
-            f'<article class="tg"><div class="art{" has-img" if game_img(name, prov) else ""}" style="--g1:{c1};--g2:{c2}">'
-            f'{game_img(name, prov)}<span class="rank">#{i + 1}</span><b>{esc(name)}</b></div>'
+            f'<article class="tg"><div class="art{" has-img" if img else ""}" style="--g1:{c1};--g2:{c2}">'
+            f'{img}<span class="rank">#{i + 1}</span>{"" if img else "<b>" + esc(name) + "</b>"}</div>'
             f'<div class="tg-body"><h3>{esc(name)}</h3><p class="prov">{esc(prov)} · {esc(kind)}</p>'
             f'<dl><div><dt>RTP</dt><dd>{rtp}</dd></div><div><dt>Volatilidad</dt><dd>{esc(vol)}</dd></div>'
             f'<div><dt>Ganancia máx.</dt><dd>{esc(mx)}</dd></div></dl></div></article>')
@@ -354,8 +355,8 @@ def expand(body):
 
     def _box(m):
         head, sub, btn, link = (m.group(1).split("|") + ["", "", "", ""])[:4]
-        return (f'<div class="cta-box"><p>{esc(head)}<small>{esc(sub)}</small></p>'
-                f'{cta(btn, "green", link or "reg")}</div>')
+        return (f'<div class="cta-box"><div class="cta-text"><p class="cta-title">{esc(head)}</p>'
+                f'<p class="cta-sub">{esc(sub)}</p></div>{cta(btn, "green", link or "reg")}</div>')
 
     def _games(m):
         items = [g.strip() for g in m.group(1).split(";") if g.strip()]
@@ -365,7 +366,7 @@ def expand(body):
             c1, c2 = GAME_COLORS[i % len(GAME_COLORS)]
             img = game_img(name, prov)
             out.append(f'<div class="game"><div class="art{" has-img" if img else ""}" style="--g1:{c1};--g2:{c2}">'
-                       f'{img}<b>{esc(name)}</b></div><span>{esc(prov)}</span></div>')
+                       f'{img or "<b>" + esc(name) + "</b>"}</div><span>{esc(prov)}</span></div>')
         return '<div class="games">' + "".join(out) + "</div>"
 
     body = re.sub(r"\{\{cta:([^}]+)\}\}", _cta, body)
@@ -376,6 +377,30 @@ def expand(body):
                   lambda m: f'<div class="text-art"><div>{m.group(1)}</div>{art_html(m.group(2), m.group(3))}</div>', body, flags=re.S)
     body = re.sub(r"\{\{phones:([a-z,]+)\}\}", lambda m: phones_html(m.group(1)), body)
     body = re.sub(r"\{\{icon:([a-z]+)\}\}", lambda m: icon(m.group(1)), body)
+
+    # Таблицы: первая ячейка строки — заголовок строки; шапка в thead, данные в tbody
+    def _table(m):
+        t = m.group(2)
+        rows = re.findall(r"<tr>.*?</tr>", t, re.S)
+        if not rows:
+            return m.group(0)
+        head = rows[0] if rows[0].startswith("<tr><th") else ""
+        data = rows[1:] if head else rows
+        rank = head.startswith("<tr><th>#</th>")
+        fixed = []
+        for r in data:
+            if rank:   # рейтинг: строку называет вторая ячейка
+                r = re.sub(r"^(<tr><td>[^<]*</td>)<td>(.*?)</td>", r'\1<th scope="row">\2</th>', r, flags=re.S)
+            else:
+                r = re.sub(r"^<tr><td>(.*?)</td>", r'<tr><th scope="row">\1</th>', r, flags=re.S)
+            fixed.append(r)
+        if head:
+            head = head.replace("<th>", '<th scope="col">')
+        inner = (f"<thead>{head}</thead>" if head else "") + "<tbody>" + "".join(fixed) + "</tbody>"
+        return f"{m.group(1)}{inner}</table>"
+    body = re.sub(r"(<table[^>]*>)(.*?)</table>", _table, body, flags=re.S)
+    # Шаги: пробел между заголовком шага и описанием (иначе текст слипается без CSS)
+    body = re.sub(r'<ol class="steps">.*?</ol>', lambda m: m.group(0).replace("</strong>", "</strong> "), body, flags=re.S)
     body = body.replace("{{updated}}", UPDATED_TXT)
     return body
 
@@ -433,7 +458,7 @@ def links(items):
 
 
 LOGO = (f'<a class="logo" href="/" aria-label="{SITE_NAME} inicio">'
-        f'<span class="logo-mark" aria-hidden="true">S</span><span class="logo-txt">Stakes<small>.com.mx</small></span></a>')
+        f'<span class="logo-mark" aria-hidden="true">S</span><span class="logo-txt">Stakes<span class="logo-tld">.com.mx</span></span></a>')
 
 
 def side_section(title, items, current):
@@ -476,7 +501,7 @@ def header(current, with_cta=True):
 
 
 def bottom_nav(current):
-    items = [f'<li><button type="button" class="open-menu" aria-controls="sidebar">{icon("menu")}<span>Menú</span></button></li>']
+    items = [f'<li><button type="button" class="open-menu" aria-expanded="false" aria-controls="sidebar">{icon("menu")}<span>Menú</span></button></li>']
     for href, label, ico in BOTTOM_NAV:
         cur = ' aria-current="page"' if href == current else ""
         items.append(f'<li><a href="{href}"{cur}>{icon(ico)}<span>{label}</span></a></li>')
@@ -535,7 +560,8 @@ def footer():
 
 
 def page_html(slug, meta, body):
-    return headings_tc(_page_html(slug, meta, body))
+    doc = headings_tc(_page_html(slug, meta, body))
+    return "\n".join(line.rstrip() for line in doc.split("\n")) + "\n"
 
 
 def _page_html(slug, meta, body):
@@ -589,7 +615,7 @@ def _page_html(slug, meta, body):
     hero_side = ""
     if meta.get("offer"):
         o = meta["offer"]
-        hero_side = (f'<aside class="offer-card"><span class="tag">{esc(o["tag"])}</span>'
+        hero_side = (f'<aside class="offer-card" aria-label="Oferta destacada de Stake"><span class="tag">{esc(o["tag"])}</span>'
                      f'<div class="offer-art" aria-hidden="true"><span></span><span></span><span></span></div>'
                      f'<div class="big">{esc(o["title"])}</div>'
                      f'{cta(o["button"], "green", o.get("link", "reg"))}'
@@ -604,7 +630,7 @@ def _page_html(slug, meta, body):
                          f'<img src="/assets/img/app/stake-movil-{k}.jpg" width="517" height="1120" fetchpriority="high" alt="{esc(alt)}">'
                          f'</div></figure>')
         elif (SRC / "assets" / "img" / "hero" / f"{slug}.webp").exists():
-            alt = meta.get("hero_alt", meta["h1"])
+            alt = meta.get("hero_alt", "").split(":")[0].strip()
             hero_side = (f'<figure class="hero-art"><img src="/assets/img/hero/{slug}.webp" width="1024" height="1024" '
                          f'fetchpriority="high" alt="{esc(alt)}"></figure>')
 
@@ -652,7 +678,7 @@ def _page_html(slug, meta, body):
         og_url = f'<meta property="og:url" content="{canonical}">'
     og_type = "website" if slug == "index" else "article"
 
-    return f'''<!doctype html>
+    return f'''<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -687,9 +713,9 @@ def _page_html(slug, meta, body):
 {hero}
 {toc}
 <div class="{page_cls}">
-  <article class="content{' legal' if kind == 'legal' else ''}">
+  <div class="content{' legal' if kind == 'legal' else ''}">
 {body}
-  </article>
+  </div>
   {meta_line}
 </div>
 </main>
