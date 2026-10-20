@@ -303,21 +303,20 @@ def icon_for(text):
     return None
 
 
-def add_icons(body):
+def add_icons(body, headings=True):
     def _h2(m):
         name = icon_for(m.group(2))
         if not name:
             return m.group(0)
         return f'{m.group(1)}<span class="h-ico" aria-hidden="true">{icon(name)}</span>{m.group(2)}</h2>'
-    body = re.sub(r'(<h2 id="[^"]+"(?: data-tab="[^"]+")?>)(.*?)</h2>', _h2, body)
+    if headings:
+        body = re.sub(r'(<h2 id="[^"]+"(?: data-tab="[^"]+")?>)(.*?)</h2>', _h2, body)
 
     def _card(m):
         inner = m.group(2)
         h3 = re.search(r"<h3>(.*?)</h3>", inner)
         kicker = re.search(r'<span class="kicker">(.*?)</span>', inner)
-        name = icon_for((h3.group(1) if h3 else "") + " " + (kicker.group(1) if kicker else ""))
-        if not name:
-            return m.group(0)
+        name = icon_for((h3.group(1) if h3 else "") + " " + (kicker.group(1) if kicker else "")) or "star"
         return f'{m.group(1)}<span class="card-ico" aria-hidden="true">{icon(name)}</span>{inner}{m.group(3)}'
     body = re.sub(r'(<(?:div|a) class="card"[^>]*>)(.*?)(</(?:div|a)>)', _card, body, flags=re.S)
     return body
@@ -543,8 +542,7 @@ def _page_html(slug, meta, body):
     canonical = SITE + url
     kind = meta.get("type", "commercial")
     body = expand(body)
-    if kind != "legal":
-        body = add_icons(body)
+    body = add_icons(body, headings=kind != "legal")
 
     crumbs = ""
     graph = []

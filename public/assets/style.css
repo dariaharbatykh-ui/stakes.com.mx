@@ -375,7 +375,7 @@ a.card:hover { transform: translateY(-3px); background: var(--bg-3); }
 .content > section { margin-top: 72px; }
 .content > section:first-child { margin-top: 0; }
 .content > section > h2 { margin-top: 0; margin-bottom: 18px; }
-.content h3 { margin-top: 32px; margin-bottom: 12px; }
+.content > section > h3 { margin-top: 32px; margin-bottom: 12px; }
 .content p { margin-bottom: 1.15em; }
 .content .table-wrap, .content .cards, .content .howto, .content .games, .content .top-games,
 .content .phones, .content .chips, .content .steps { margin-top: 24px; margin-bottom: 28px; }
