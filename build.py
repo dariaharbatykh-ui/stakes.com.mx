@@ -151,7 +151,7 @@ def header(current, with_cta=True):
     head_cta = ""
     if with_cta:
         head_cta = ('<div class="header-cta">'
-                    + cta("Ir a Stake.mx", "green").replace('class="btn btn-green"', 'class="btn btn-green btn-sm"')
+                    + cta("Ir a Stake", "green").replace('class="btn btn-green"', 'class="btn btn-green btn-sm"')
                     + "</div>")
     return f'''<a class="skip" href="#main">Saltar al contenido</a>
 <header class="site-header">
@@ -170,7 +170,7 @@ def footer():
     <div class="footer-grid">
       <div>
         <a class="logo" href="/"><span class="logo-mark" aria-hidden="true">S</span>Stakes<small>.com.mx</small></a>
-        <p>Guía independiente en español sobre Stake México (stake.mx): registro, verificación, pagos en pesos, casino y apuestas deportivas. Datos revisados en el sitio oficial.</p>
+        <p>Guía en español sobre Stake México: registro, verificación, pagos en pesos, casino y apuestas deportivas.</p>
         <div class="badges"><span class="badge">18+</span><span class="badge">Juego responsable</span></div>
       </div>
       <div><h2>Guías</h2><ul>{links(FOOTER_GUIDES)}</ul></div>
@@ -178,8 +178,8 @@ def footer():
       <div><h2>Legal</h2><ul>{links(FOOTER_LEGAL)}</ul></div>
     </div>
     <div class="disclaimer">
-      <p>{SITE_NAME} es un sitio informativo independiente. No somos el sitio oficial de Stake, no operamos juegos ni aceptamos apuestas o pagos. Algunos enlaces son de afiliado: si te registras a través de ellos podemos recibir una comisión, sin costo para ti.</p>
-      <p>Según su sitio oficial, www.stake.mx es operada en México por Producciones Móviles S.A. de C.V., titular del permiso DGAJS/SCEVF/P-06/2005-TER expedido por la Secretaría de Gobernación, en unión de Unocapali La Paz Operadora, S.A. de C.V. Solo para mayores de 18 años. Juega con responsabilidad: si el juego deja de ser diversión, llama a la Línea de la Vida 800 911 2000.</p>
+      <p>{SITE_NAME} es un sitio informativo independiente sobre Stake: no opera juegos ni acepta apuestas o pagos. Algunos enlaces son de afiliado: si te registras a través de ellos, el sitio puede recibir una comisión sin costo para ti.</p>
+      <p>Stake en México es operado por Producciones Móviles S.A. de C.V., titular del permiso DGAJS/SCEVF/P-06/2005-TER expedido por la Secretaría de Gobernación, en unión de Unocapali La Paz Operadora, S.A. de C.V. Solo para mayores de 18 años. Juega con responsabilidad: si el juego deja de ser diversión, llama a la Línea de la Vida 800 911 2000.</p>
       <p>© 2026 {SITE_NAME}</p>
     </div>
   </div>
@@ -236,7 +236,7 @@ def page_html(slug, meta, body):
         hero_side = (f'<aside class="offer-card"><span class="tag">{esc(o["tag"])}</span>'
                      f'<div class="big">{esc(o["title"])}</div><ul>{lis}</ul>'
                      f'{cta(o["button"], "green", o.get("link", "reg"))}'
-                     f'<p class="fine">18+ · Aplican términos y condiciones de Stake.mx · Juega con responsabilidad</p></aside>')
+                     f'<p class="fine">18+ · Aplican términos y condiciones de Stake · Juega con responsabilidad</p></aside>')
 
     actions = ""
     if meta.get("hero_buttons"):
@@ -249,7 +249,7 @@ def page_html(slug, meta, body):
     meta_line = ""
     if kind != "legal":
         meta_line = (f'<div class="meta-line"><span>Actualizado: <time datetime="{UPDATED_ISO}">{UPDATED_TXT}</time></span>'
-                     f'<span>Por: Equipo editorial {SITE_NAME}</span><span>Fuente: stake.mx</span></div>')
+                     f'<span>Por: Equipo editorial {SITE_NAME}</span></div>')
     else:
         meta_line = f'<div class="meta-line"><span>Última actualización: <time datetime="{UPDATED_ISO}">{UPDATED_TXT}</time></span></div>'
 
@@ -275,13 +275,13 @@ def page_html(slug, meta, body):
     if kind != "legal":
         author = (f'<div class="author"><div class="avatar" aria-hidden="true">S</div><div>'
                   f'<strong>Equipo editorial {SITE_NAME}</strong>'
-                  f'<p>Revisamos cada dato en stake.mx y en su Centro de Ayuda antes de publicarlo. '
+                  f'<p>Cada dato sobre Stake se revisa antes de publicarse. '
                   f'Última revisión: {UPDATED_TXT}. <a href="/sobre-nosotros/">Cómo trabajamos</a>.</p></div></div>')
 
     sticky = ""
     body_cls = ""
     if kind == "commercial":
-        sticky = f'<div class="sticky-cta"><span>Stake.mx · 18+ · pesos MXN</span>{cta("Registrarme", "green").replace("btn btn-green", "btn btn-green btn-sm")}</div>'
+        sticky = f'<div class="sticky-cta"><span>Stake México · 18+ · pesos MXN</span>{cta("Registrarme", "green").replace("btn btn-green", "btn btn-green btn-sm")}</div>'
         body_cls = ' class="has-sticky"'
 
     robots = meta.get("robots", "index, follow, max-image-preview:large")
