@@ -18,6 +18,7 @@ OUT = ROOT / "public"
 
 SITE = "https://stakes.com.mx"
 SITE_NAME = "Stakes.com.mx"
+PUBLISHED_ISO = "2026-10-20"  # дата первой публикации — не менять
 UPDATED_ISO = "2026-10-20"
 UPDATED_TXT = "20 de octubre de 2026"
 # Партнёрские ссылки: регистрация и приложение.
@@ -550,7 +551,8 @@ def _page_html(slug, meta, body):
         label = meta.get("crumb", meta["h1"])
         crumbs = (f'<nav class="crumbs" aria-label="Migas de pan"><a href="/">Inicio</a>'
                   f'<span aria-hidden="true">›</span><span>{esc(label)}</span></nav>')
-        graph.append({
+        if slug != "404":
+          graph.append({
             "@type": "BreadcrumbList",
             "itemListElement": [
                 {"@type": "ListItem", "position": 1, "name": "Inicio", "item": SITE + "/"},
@@ -564,16 +566,19 @@ def _page_html(slug, meta, body):
                       "url": SITE + "/", "email": "contacto@stakes.com.mx"})
 
     graph.append({
-        "@type": "WebPage" if kind == "legal" else "Article",
+        "@type": meta.get("schema_type") or ("WebPage" if kind == "legal" else "Article"),
         "headline": meta["h1"],
         "description": meta["description"],
         "url": canonical,
         "inLanguage": "es",
-        "dateModified": UPDATED_ISO,
-        "datePublished": UPDATED_ISO,
+        "dateModified": meta.get("modified", UPDATED_ISO),
+        "datePublished": PUBLISHED_ISO,
+        "image": SITE + meta.get("og_image", "/assets/img/og/default.jpg"),
         "author": {"@type": "Organization", "name": SITE_NAME, "url": SITE + "/"},
         "publisher": {"@type": "Organization", "name": SITE_NAME, "url": SITE + "/"},
     })
+    if slug == "404":
+        graph[-1].pop("url", None)
     fs = faq_schema(body)
     if fs:
         graph.append(fs)
@@ -610,12 +615,13 @@ def _page_html(slug, meta, body):
         if slug == "app" else [reg_btn, app_btn]
     actions = '<div class="hero-actions">' + "".join(btns) + "</div>"
 
+    mod_iso = meta.get("modified", UPDATED_ISO)
     meta_line = ""
     if kind != "legal":
-        meta_line = (f'<div class="meta-line updated"><span>Actualizado: <time datetime="{UPDATED_ISO}">{UPDATED_TXT}</time></span>'
+        meta_line = (f'<div class="meta-line updated"><span>Actualizado: <time datetime="{mod_iso}">{UPDATED_TXT}</time></span>'
                      f'</div>')
     else:
-        meta_line = f'<div class="meta-line updated"><span>Última actualización: <time datetime="{UPDATED_ISO}">{UPDATED_TXT}</time></span></div>'
+        meta_line = f'<div class="meta-line updated"><span>Última actualización: <time datetime="{mod_iso}">{UPDATED_TXT}</time></span></div>'
 
     lead = f'<p class="lead">{esc(meta["lead"])}</p>' if meta.get("lead") else ""
     hero = f'''<section class="hero">
@@ -636,6 +642,14 @@ def _page_html(slug, meta, body):
     page_cls = "page"
 
     robots = meta.get("robots", "index, follow, max-image-preview:large")
+    og_img = SITE + meta.get("og_image", "/assets/img/og/default.jpg")
+    if slug == "404":
+        url_links, og_url = "", ""   # у страницы ошибки нет канонического адреса
+    else:
+        url_links = (f'<link rel="canonical" href="{canonical}">\n'
+                     f'<link rel="alternate" hreflang="es" href="{canonical}">\n'
+                     f'<link rel="alternate" hreflang="x-default" href="{canonical}">')
+        og_url = f'<meta property="og:url" content="{canonical}">'
     og_type = "website" if slug == "index" else "article"
 
     return f'''<!doctype html>
@@ -646,16 +660,18 @@ def _page_html(slug, meta, body):
 <title>{esc(meta["title"])}</title>
 <meta name="description" content="{esc(meta["description"])}">
 <meta name="robots" content="{robots}">
-<link rel="canonical" href="{canonical}">
-<link rel="alternate" hreflang="es" href="{canonical}">
-<link rel="alternate" hreflang="x-default" href="{canonical}">
+{url_links}
 <meta property="og:locale" content="es_MX">
 <meta property="og:type" content="{og_type}">
 <meta property="og:site_name" content="{SITE_NAME}">
 <meta property="og:title" content="{esc(meta["title"])}">
 <meta property="og:description" content="{esc(meta["description"])}">
-<meta property="og:url" content="{canonical}">
-<meta name="twitter:card" content="summary">
+{og_url}
+<meta property="og:image" content="{og_img}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{esc(meta["h1"])}">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0f212e">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/manrope-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -734,7 +750,7 @@ def main():
         dest.write_text(out, encoding="utf-8")
         if "noindex" not in meta.get("robots", ""):
             prio = meta.get("priority", "0.5")
-            sitemap.append(f"  <url><loc>{SITE}{url_of(slug)}</loc><lastmod>{UPDATED_ISO}</lastmod><priority>{prio}</priority></url>")
+            sitemap.append(f"  <url><loc>{SITE}{url_of(slug)}</loc><lastmod>{meta.get('modified', UPDATED_ISO)}</lastmod><priority>{prio}</priority></url>")
         print(f"{url_of(slug):34} T({len(t)}) D({len(d)})")
 
     (OUT / "sitemap.xml").write_text(
@@ -747,13 +763,21 @@ def main():
 
     # Cloudflare (Workers static assets): кэш и заголовки безопасности
     (OUT / "_headers").write_text(
+        "https://:version.:subdomain.workers.dev/*\n"
+        "  X-Robots-Tag: noindex\n"
         "/*\n"
         "  X-Content-Type-Options: nosniff\n"
         "  Referrer-Policy: strict-origin-when-cross-origin\n"
         "  X-Frame-Options: SAMEORIGIN\n"
         "  Permissions-Policy: camera=(), microphone=(), geolocation=()\n"
-        "/assets/*\n"
+        "/assets/style.css\n"
         "  Cache-Control: public, max-age=31536000, immutable\n"
+        "/assets/site.js\n"
+        "  Cache-Control: public, max-age=31536000, immutable\n"
+        "/assets/fonts/*\n"
+        "  Cache-Control: public, max-age=31536000, immutable\n"
+        "/assets/img/*\n"
+        "  Cache-Control: public, max-age=604800\n"
         "/sitemap.xml\n"
         "  Cache-Control: public, max-age=3600\n"
         "/robots.txt\n"
