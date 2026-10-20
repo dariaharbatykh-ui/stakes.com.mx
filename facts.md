@@ -82,7 +82,8 @@
 | Факт | Значение | Источник |
 |---|---|---|
 | Originales de Stake | Mines, Plinko, Chicken, Dice, Keno, Limbo, Crash, Slide, Blackjack | stake.mx |
-| Слоты (в тренде) | Gates of Olympus 1000/2500, Sugar Rush 1000, Duck Hunters 2, Le Fisherman, Big Bass Vegas 1000 | stake.mx |
+| Слоты (в тренде) | Gates of Olympus 1000, Sugar Rush 1000, Duck Hunters, Duck Hunters 2, Le Fisherman, Loan Shark, Waylanders Forge, Ra vs Osiris: Eternity (20.10.2026) | stake.mx/casino/home |
+| Превью игр и скриншоты | обложки из лобби Stake (mediumrare.imgix.net) и скриншоты мобильной версии stake.mx, 20.10.2026 | src/assets/img/ |
 | Провайдеры | Pragmatic Play, Evolution, Nolimit City, Hacksaw Gaming, Paperclip Gaming, BGaming, Smartsoft, Twist Gaming, Donut Gaming, Valkyrie | stake.mx |
 | Live / Game shows | lobbies Blackjack, Ruleta, Baccarat (Evolution, Pragmatic Play), Crazy Time, Lightning Roulette, Mega Roulette, Lightning Dice, Ice Fishing | stake.mx |
 | Burst games | Aviamasters, JetX, Minedrop 2, Keno Xtreme | stake.mx |
@@ -111,6 +112,20 @@
 | Pausa en el juego | 1, 7, 30, 60, 90 дней | help Stake Smart |
 | Autoexclusión | 6 meses, 1–5 años, indefinida (реактивация не раньше 6 месяцев, через support@stake.mx) | help Stake Smart |
 | Другие инструменты | лимиты депозита, exclusión de casino, cierre de cuenta | help |
+
+## Дополнительно из справочного центра (help.stake.mx)
+
+| Факт | Значение | Источник |
+|---|---|---|
+| Количество уровней VIP | «El Programa VIP cuenta con más de 15 niveles» | help «¿Qué es el Programa VIP de Stake?» |
+| Bonus Drops | коды уникальные, «limitados y sensibles al tiempo», Stake публикует их «diariamente» в Telegram | help «¿Qué son las Bonificaciones Extra?» |
+| 2FA | защищает «de accesos no autorizados, retiros, envío de propinas y otras transacciones»; настройка: Ajustes > Seguridad, код/QR, 30 секунд, подтверждение по email | help «¿Cómo configurar la 2FA?» |
+| Сброс пароля | форма «Contraseña Olvidada», письмо приходит «en unos pocos minutos» | help «¿Cómo restablecer tu contraseña?» |
+| Турниры слотов | Stake vs Eddie и Conquista el Casino — оба помечены «Torneo de slots», $100,000 MXN | stake.mx/casino/home |
+| Бонус на день рождения | нужен проверенный email, проверенный аккаунт, VIP от Bronce; письмо со ссылкой/купоном на 7 дней | help «¿Cómo solicitar los beneficios del Programa VIP?» |
+| Еженедельный бонус | в приватном VIP-канале Telegram; ссылка открывает Stake, где выбирают валюту | help «¿Dónde encuentro mi Bonificación Semanal…?» |
+| Caja Fuerte | Cuenta > Caja Fuerte; доступ: пароль, проверенный email, 2FA; хранение без срока | help «Protegiendo tus fondos…» |
+| Múltiple | все выборы должны выиграть; аннулированный считается x1 | help «¿Qué es una Apuesta Múltiple?» |
 
 ## Пробелы
 

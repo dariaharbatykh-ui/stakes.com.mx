@@ -104,6 +104,74 @@ def asset_ver(name):
     return hashlib.md5((SRC / "assets" / name).read_bytes()).hexdigest()[:8]
 
 
+# Заголовки: каждое слово с большой буквы, кроме предлогов (и del/al = предлог + артикль).
+# Первое слово заголовка и первое слово после «:», «?», «!», «.» — всегда с большой.
+PREPOSITIONS = {
+    "a", "ante", "bajo", "cabe", "con", "contra", "de", "desde", "durante", "en", "entre",
+    "hacia", "hasta", "mediante", "para", "por", "según", "sin", "so", "sobre", "tras",
+    "versus", "vs", "vía", "del", "al",
+    "of",  # английский предлог в названиях игр: Gates of Olympus
+}
+_LEAD = "¿¡«“\"'(["
+_TRAIL = "?!.,;:»”\"')]…"
+
+
+def _tc_word(word, force):
+    i = 0
+    while i < len(word) and word[i] in _LEAD:
+        i += 1
+    j = len(word)
+    while j > i and word[j - 1] in _TRAIL:
+        j -= 1
+    core = word[i:j]
+    if not core or not core[0].isalpha():
+        return word
+    if any(c.isupper() for c in core[1:]):
+        return word  # iPhone, eSports, NFL, SPEI — как есть
+    if not force and core.lower() in PREPOSITIONS:
+        core = core.lower()
+    else:
+        core = core[0].upper() + core[1:]
+    return word[:i] + core + word[j:]
+
+
+def title_case(text, start=True):
+    """Возвращает (текст, start) — start=True, если следующее слово должно быть с большой."""
+    out = []
+    for part in re.split(r"(\s+)", text):
+        if not part or part.isspace():
+            out.append(part)
+            continue
+        out.append(_tc_word(part, start))
+        stripped = part.rstrip("»”\"')")
+        start = bool(stripped) and stripped[-1] in ":?!." or part in ("—", "–", "|")
+    return "".join(out), start
+
+
+def tc(text):
+    return title_case(text)[0]
+
+
+def tc_html(fragment):
+    """Title case только для текста между тегами (иконки и разметка не трогаются)."""
+    out, start = [], True
+    for part in re.split(r"(<[^>]+>)", fragment):
+        if part.startswith("<"):
+            out.append(part)
+        else:
+            t, start = title_case(part, start)
+            out.append(t)
+    return "".join(out)
+
+
+def headings_tc(doc):
+    doc = re.sub(r"(<(h[1-3])\b[^>]*>)(.*?)(</\2>)", lambda m: m.group(1) + tc_html(m.group(3)) + m.group(4), doc, flags=re.S)
+    doc = re.sub(r'(<div class="big">)(.*?)(</div>)', lambda m: m.group(1) + tc_html(m.group(2)) + m.group(3), doc)
+    doc = re.sub(r'(<div class="cta-box"><p>)(.*?)(<small>)', lambda m: m.group(1) + tc_html(m.group(2)) + m.group(3), doc)
+    doc = re.sub(r'(<nav class="tabs".*?</nav>)', lambda m: re.sub(r'(<a href="#[^"]+">)(.*?)(</a>)', lambda a: a.group(1) + tc_html(a.group(2)) + a.group(3), m.group(1)), doc, flags=re.S)
+    return doc
+
+
 def esc(s):
     return html.escape(s, quote=True)
 
@@ -127,13 +195,46 @@ TOP_GAMES = [
 ]
 
 
+def slugify(text):
+    import unicodedata
+    t = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode().lower()
+    return re.sub(r"[^a-z0-9]+", "-", t).strip("-")
+
+
+def game_img(name, prov, w=180, h=236):
+    """<img> превью игры, если файл есть в src/assets/img/games/<slug>.webp."""
+    slug = slugify(name)
+    if not (SRC / "assets" / "img" / "games" / f"{slug}.webp").exists():
+        return ""
+    return (f'<img src="/assets/img/games/{slug}.webp" width="{w}" height="{h}" loading="lazy" decoding="async" '
+            f'alt="{esc(name)} de {esc(prov)} en Stake">')
+
+
+PHONES = {
+    "home": ("Inicio de Stake en el celular", "Pantalla de inicio de Stake México en el navegador del celular"),
+    "casino": ("Casino de Stake en el móvil", "Casino de Stake México en el celular con Originales y slots"),
+    "sports": ("Apuestas deportivas en el móvil", "Sportsbook de Stake México en el celular con momios en pesos"),
+}
+
+
+def phones_html(keys):
+    figs = []
+    for k in [x.strip() for x in keys.split(",") if x.strip()]:
+        cap, alt = PHONES[k]
+        figs.append(f'<figure class="phone"><div class="phone-frame">'
+                    f'<img src="/assets/img/app/stake-movil-{k}.jpg" width="517" height="1120" loading="lazy" decoding="async" alt="{esc(alt)}">'
+                    f'</div><figcaption>{esc(cap)}</figcaption></figure>')
+    cls = "phones" + (" single" if len(figs) == 1 else "")
+    return f'<div class="{cls}">' + "".join(figs) + "</div>"
+
+
 def top_games_html():
     out = []
     for i, (name, prov, kind, rtp, vol, mx) in enumerate(TOP_GAMES):
         c1, c2 = GAME_COLORS[i % len(GAME_COLORS)]
         out.append(
-            f'<article class="tg"><div class="art" style="--g1:{c1};--g2:{c2}">'
-            f'<span class="rank">#{i + 1}</span><b>{esc(name)}</b></div>'
+            f'<article class="tg"><div class="art{" has-img" if game_img(name, prov) else ""}" style="--g1:{c1};--g2:{c2}">'
+            f'{game_img(name, prov)}<span class="rank">#{i + 1}</span><b>{esc(name)}</b></div>'
             f'<div class="tg-body"><h3>{esc(name)}</h3><p class="prov">{esc(prov)} · {esc(kind)}</p>'
             f'<dl><div><dt>RTP</dt><dd>{rtp}</dd></div><div><dt>Volatilidad</dt><dd>{esc(vol)}</dd></div>'
             f'<div><dt>Ganancia máx.</dt><dd>{esc(mx)}</dd></div></dl></div></article>')
@@ -162,14 +263,16 @@ def expand(body):
         for i, g in enumerate(items):
             name, prov = (g.split("/") + [""])[:2]
             c1, c2 = GAME_COLORS[i % len(GAME_COLORS)]
-            out.append(f'<div class="game"><div class="art" style="--g1:{c1};--g2:{c2}">'
-                       f'<b>{esc(name)}</b></div><span>{esc(prov)}</span></div>')
+            img = game_img(name, prov)
+            out.append(f'<div class="game"><div class="art{" has-img" if img else ""}" style="--g1:{c1};--g2:{c2}">'
+                       f'{img}<b>{esc(name)}</b></div><span>{esc(prov)}</span></div>')
         return '<div class="games">' + "".join(out) + "</div>"
 
     body = re.sub(r"\{\{cta:([^}]+)\}\}", _cta, body)
     body = re.sub(r"\{\{ctabox:([^}]+)\}\}", _box, body)
     body = re.sub(r"\{\{games:([^}]+)\}\}", _games, body)
     body = body.replace("{{topgames}}", top_games_html())
+    body = re.sub(r"\{\{phones:([a-z,]+)\}\}", lambda m: phones_html(m.group(1)), body)
     body = re.sub(r"\{\{icon:([a-z]+)\}\}", lambda m: icon(m.group(1)), body)
     body = body.replace("{{updated}}", UPDATED_TXT)
     return body
@@ -292,6 +395,10 @@ def footer():
 
 
 def page_html(slug, meta, body):
+    return headings_tc(_page_html(slug, meta, body))
+
+
+def _page_html(slug, meta, body):
     url = url_of(slug)
     canonical = SITE + url
     kind = meta.get("type", "commercial")
@@ -358,9 +465,7 @@ def page_html(slug, meta, body):
     else:
         meta_line = f'<div class="meta-line"><span>Última actualización: <time datetime="{UPDATED_ISO}">{UPDATED_TXT}</time></span></div>'
 
-    lead = f'<p class="lead">{esc(meta["sub"])}</p>' if meta.get("sub") else ""
-    if meta.get("lead"):
-        body = f'<p class="intro">{meta["lead"]}</p>\n' + body
+    lead = f'<p class="lead">{esc(meta["lead"])}</p>' if meta.get("lead") else ""
     hero = f'''<section class="hero">
   <div class="wrap">
     {crumbs}
@@ -377,7 +482,7 @@ def page_html(slug, meta, body):
 </section>'''
 
     toc = toc_from(body) if kind != "legal" else ""
-    page_cls = "page" + (" narrow" if kind != "commercial" else "")
+    page_cls = "page"
 
     robots = meta.get("robots", "index, follow, max-image-preview:large")
     og_type = "website" if slug == "index" else "article"
@@ -450,6 +555,11 @@ def main():
     for p in pages:
         slug = p.stem
         meta, body = parse(p)
+        meta["title"] = tc(meta["title"])
+        meta.setdefault("crumb", meta["h1"])
+        meta["h1"] = tc(meta["h1"])
+        if meta.get("offer"):
+            meta["offer"]["title"] = tc(meta["offer"]["title"])
         t, d = meta["title"], meta["description"]
         if len(t) > 60:
             errors.append(f"{slug}: title {len(t)} > 60")
