@@ -367,3 +367,6 @@ a.card:hover { transform: translateY(-3px); background: var(--bg-3); }
 }
 
 .side-title { margin: 4px 10px 6px; font-size: .72rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); }
+
+/* Дата обновления в конце страницы, перед футером */
+.meta-line.updated { margin: 32px 0 0; padding-top: 16px; border-top: 1px solid var(--bg-3); }

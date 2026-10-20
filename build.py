@@ -615,10 +615,10 @@ def _page_html(slug, meta, body):
 
     meta_line = ""
     if kind != "legal":
-        meta_line = (f'<div class="meta-line"><span>Actualizado: <time datetime="{UPDATED_ISO}">{UPDATED_TXT}</time></span>'
+        meta_line = (f'<div class="meta-line updated"><span>Actualizado: <time datetime="{UPDATED_ISO}">{UPDATED_TXT}</time></span>'
                      f'</div>')
     else:
-        meta_line = f'<div class="meta-line"><span>Última actualización: <time datetime="{UPDATED_ISO}">{UPDATED_TXT}</time></span></div>'
+        meta_line = f'<div class="meta-line updated"><span>Última actualización: <time datetime="{UPDATED_ISO}">{UPDATED_TXT}</time></span></div>'
 
     lead = f'<p class="lead">{esc(meta["lead"])}</p>' if meta.get("lead") else ""
     hero = f'''<section class="hero">
@@ -627,7 +627,6 @@ def _page_html(slug, meta, body):
     <div class="hero-grid"{' style="grid-template-columns:1fr"' if not hero_side else ''}>
       <div>
         <h1>{esc(meta["h1"])}</h1>
-        {meta_line}
         {lead}
         {actions}
       </div>
@@ -678,6 +677,7 @@ def _page_html(slug, meta, body):
   <article class="content{' legal' if kind == 'legal' else ''}">
 {body}
   </article>
+  {meta_line}
 </div>
 </main>
 {footer()}
