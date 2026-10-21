@@ -260,7 +260,7 @@ SHOTS = {
     "iniciar-sesion": ("Iniciar sesión", "Ventana de inicio de sesión de Stake México"),
     "bono-de-bienvenida": ("Promociones", "Sección de promociones de Stake México"),
     "codigo-promocional": ("Club VIP", "Rangos del Club VIP de Stake México con bonificaciones semanales y mensuales"),
-    "metodos-de-pago": ("Solo pesos", "Centro de Ayuda de Stake México: solo pesos mexicanos, sin criptomonedas"),
+    "metodos-de-pago": ("En pesos", "Apuestas recientes en Stake México con montos en pesos mexicanos"),
     "casino": ("Casino", "Lobby del casino de Stake México"),
     "apuestas-deportivas": ("Deportes", "Sección de apuestas deportivas de Stake México"),
     "originales-de-stake": ("Originales", "Sección Originales de Stake con Mines, Plinko y Dice"),

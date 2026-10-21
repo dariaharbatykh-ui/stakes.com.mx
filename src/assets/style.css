@@ -346,9 +346,10 @@ a.card:hover { transform: translateY(-3px); background: var(--bg-3); }
 /* Картинка первого экрана */
 .hero-art { margin: 0; display: flex; justify-content: center; }
 .hero-art { overflow: hidden; }
-.hero-art img { width: 100%; max-width: 400px; height: auto; transform: scale(1.25); -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 52%, transparent 71%); mask-image: radial-gradient(circle at 50% 50%, #000 52%, transparent 71%); }
+.hero-art img { width: 100%; max-width: 400px; height: auto; -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 52%, transparent 71%); mask-image: radial-gradient(circle at 50% 50%, #000 52%, transparent 71%); }
 .hero-phone .phone-frame { width: 230px; transform: rotate(4deg); }
-.hero-phone img { -webkit-mask-image: none; mask-image: none; max-width: none; }
+.hero-art.hero-phone { overflow: visible; padding: 12px 0; }
+.hero-phone img { -webkit-mask-image: none; mask-image: none; max-width: none; transform: none; }
 /* Скриншот Stake в первом экране */
 .hero-grid.has-shot { grid-template-columns: 1.1fr 1fr; gap: 40px; }
 .hero-shot { position: relative; margin: 0; padding: 22px 6px 30px 0; perspective: 1400px; }
