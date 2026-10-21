@@ -47,7 +47,7 @@ npm run login
 npm run deploy
 ```
 
-Сайт: https://stakes-com-mx.stakesmx.workers.dev (поддомен workers.dev — `stakesmx`; закрыт от индексации заголовком `X-Robots-Tag: noindex`). Чтобы подключить домен, добавьте зону stakes.com.mx в Cloudflare и раскомментируйте `routes` в `wrangler.toml`: только `stakes.com.mx/*` и `www.stakes.com.mx/*`. Поддомен `scm.stakes.com.mx` (партнёрские ссылки) в маршруты не добавлять.
+Сайт: https://stakes.com.mx (домен уже подключён к воркеру `stakes-com-mx` в панели Cloudflare; www.stakes.com.mx отдаёт 301 на основной домен). Технический адрес: https://stakes-com-mx.stakesmx.workers.dev (поддомен workers.dev — `stakesmx`; закрыт от индексации заголовком `X-Robots-Tag: noindex`). Обновление сайта: `npm run deploy` — домен при этом остаётся подключённым. Поддомен `scm.stakes.com.mx` (партнёрские ссылки) к воркеру не подключать.
 
 ## Шорткоды в контенте
 
