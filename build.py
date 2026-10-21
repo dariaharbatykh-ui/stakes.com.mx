@@ -722,7 +722,8 @@ def _page_html(slug, meta, body):
         meta_line = f'<div class="meta-line updated"><span>Última actualización: <time datetime="{mod_iso}">{UPDATED_TXT}</time></span></div>'
 
     lead = f'<p class="lead">{lead_html(meta["lead"])}</p>' if meta.get("lead") else ""
-    hero = f'''<section class="hero">
+    # Первый экран — вводная часть всей страницы (h1, лид, кнопки), поэтому <header> внутри <main>, а не <section>
+    hero = f'''<header class="hero">
   <div class="wrap">
     {crumbs}
     <div class="hero-grid{' has-shot' if 'hero-shot' in hero_side else ''}"{' style="grid-template-columns:1fr"' if not hero_side else ''}>
@@ -734,7 +735,7 @@ def _page_html(slug, meta, body):
       {hero_side}
     </div>
   </div>
-</section>'''
+</header>'''
 
     toc = toc_from(body) if kind != "legal" else ""
     page_cls = "page"
@@ -771,7 +772,10 @@ def _page_html(slug, meta, body):
 <meta property="og:image:alt" content="{esc(meta["h1"])}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0f212e">
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/assets/fonts/manrope-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/style.css?v={asset_ver("style.css")}">
 <script type="application/ld+json">{ld}</script>
@@ -813,6 +817,15 @@ def main():
         shutil.rmtree(OUT)
     OUT.mkdir()
     shutil.copytree(SRC / "assets", OUT / "assets")
+    # Файлы, которые должны лежать в корне сайта (favicon.ico, apple-touch-icon.png)
+    for f in (SRC / "root").iterdir():
+        shutil.copy2(f, OUT / f.name)
+    (OUT / "site.webmanifest").write_text(json.dumps({
+        "name": SITE_NAME, "short_name": SITE_NAME, "lang": "es", "start_url": "/",
+        "display": "browser", "background_color": "#0f212e", "theme_color": "#0f212e",
+        "icons": [{"src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+                  {"src": "/assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png"}],
+    }, ensure_ascii=False), encoding="utf-8")
 
     errors = []
     titles, descs = {}, {}
@@ -879,7 +892,14 @@ def main():
         "/sitemap.xml\n"
         "  Cache-Control: public, max-age=3600\n"
         "/robots.txt\n"
-        "  Cache-Control: public, max-age=3600\n",
+        "  Cache-Control: public, max-age=3600\n"
+        "/favicon.ico\n"
+        "  Cache-Control: public, max-age=604800\n"
+        "/apple-touch-icon.png\n"
+        "  Cache-Control: public, max-age=604800\n"
+        "/site.webmanifest\n"
+        "  Content-Type: application/manifest+json\n"
+        "  Cache-Control: public, max-age=86400\n",
         encoding="utf-8")
 
     if errors:
