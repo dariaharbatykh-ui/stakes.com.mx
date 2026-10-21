@@ -253,6 +253,51 @@ PHONES = {
 }
 
 
+# Скриншоты Stake для первого экрана: slug -> (подпись на плашке, alt). Файл: src/assets/img/shots/<slug>.jpg
+SHOTS = {
+    "index": ("Casino y deportes", "Inicio de Stake México con accesos a casino y apuestas deportivas"),
+    "registro": ("Registro", "Formulario de registro de Stake México con nombre, apellido y fecha de nacimiento"),
+    "iniciar-sesion": ("Iniciar sesión", "Ventana de inicio de sesión de Stake México"),
+    "bono-de-bienvenida": ("Promociones", "Sección de promociones de Stake México"),
+    "codigo-promocional": ("Club VIP", "Rangos del Club VIP de Stake México con bonificaciones semanales y mensuales"),
+    "metodos-de-pago": ("Solo pesos", "Centro de Ayuda de Stake México: solo pesos mexicanos, sin criptomonedas"),
+    "casino": ("Casino", "Lobby del casino de Stake México"),
+    "apuestas-deportivas": ("Deportes", "Sección de apuestas deportivas de Stake México"),
+    "originales-de-stake": ("Originales", "Sección Originales de Stake con Mines, Plinko y Dice"),
+    "slots": ("Slots", "Catálogo de slots de Stake México"),
+    "casino-en-vivo": ("En vivo", "Lobby del casino en vivo de Stake México"),
+    "blackjack": ("Blackjack", "Mesas de blackjack en Stake México"),
+    "apuestas-futbol": ("Fútbol", "Apuestas de fútbol en Stake México"),
+    "apuestas-tenis": ("Tenis", "Apuestas de tenis en Stake México"),
+    "apuestas-cricket": ("Críquet", "Apuestas de críquet en Stake México"),
+    "apuestas-hockey": ("Hockey", "Apuestas de hockey sobre hielo en Stake México"),
+    "apuestas-esports": ("eSports", "Apuestas de League of Legends en Stake México"),
+}
+
+
+# Мобильный скрин поверх основного (как телефон рядом с экраном компьютера)
+SHOT_PHONE = {"index": "home", "casino": "casino", "apuestas-deportivas": "sports",
+              "casino-en-vivo": "live", "bono-de-bienvenida": "promos"}
+
+
+def jpeg_size(path):
+    # Ширина и высота JPEG из маркера SOF, чтобы width/height совпадали с файлом
+    b = path.read_bytes()
+    i = 2
+    while i < len(b):
+        marker, size = b[i + 1], int.from_bytes(b[i + 2:i + 4], "big")
+        if marker in (0xC0, 0xC1, 0xC2):
+            return int.from_bytes(b[i + 7:i + 9], "big"), int.from_bytes(b[i + 5:i + 7], "big")
+        i += 2 + size
+    return 800, 496
+
+
+def lead_html(s):
+    # В лиде первого экрана допускается только внутренняя ссылка <a href="/...">, остальное экранируется
+    tag = re.compile(r'(<a href="/[^"<>]*">|</a>)')
+    return "".join(p if tag.fullmatch(p) else esc(p) for p in tag.split(s))
+
+
 def phones_html(keys):
     figs = []
     for k in [x.strip() for x in keys.split(",") if x.strip()]:
@@ -629,7 +674,18 @@ def _page_html(slug, meta, body):
     ld = json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False)
 
     hero_side = ""
-    if meta.get("offer"):
+    shot = SRC / "assets" / "img" / "shots" / f"{slug}.jpg"
+    if slug in SHOTS and shot.exists():
+        tag, alt = SHOTS[slug]
+        w, h = jpeg_size(shot)
+        phone = ""
+        if slug in SHOT_PHONE:
+            phone = (f'<div class="shot-phone" aria-hidden="true"><img src="/assets/img/app/stake-movil-{SHOT_PHONE[slug]}.jpg" '
+                     f'width="517" height="1120" alt=""></div>')
+        hero_side = (f'<figure class="hero-shot"><div class="shot-frame">'
+                     f'<img src="/assets/img/shots/{slug}.jpg" width="{w}" height="{h}" fetchpriority="high" alt="{esc(alt)}">'
+                     f'</div>{phone}<span class="shot-tag" aria-hidden="true">{esc(tag)}</span></figure>')
+    elif meta.get("offer"):
         o = meta["offer"]
         hero_side = (f'<aside class="offer-card" aria-label="Oferta destacada de Stake"><span class="tag">{esc(o["tag"])}</span>'
                      f'<div class="offer-art" aria-hidden="true"><span></span><span></span><span></span></div>'
@@ -665,11 +721,11 @@ def _page_html(slug, meta, body):
     else:
         meta_line = f'<div class="meta-line updated"><span>Última actualización: <time datetime="{mod_iso}">{UPDATED_TXT}</time></span></div>'
 
-    lead = f'<p class="lead">{esc(meta["lead"])}</p>' if meta.get("lead") else ""
+    lead = f'<p class="lead">{lead_html(meta["lead"])}</p>' if meta.get("lead") else ""
     hero = f'''<section class="hero">
   <div class="wrap">
     {crumbs}
-    <div class="hero-grid"{' style="grid-template-columns:1fr"' if not hero_side else ''}>
+    <div class="hero-grid{' has-shot' if 'hero-shot' in hero_side else ''}"{' style="grid-template-columns:1fr"' if not hero_side else ''}>
       <div>
         <h1>{esc(meta["h1"])}</h1>
         {lead}

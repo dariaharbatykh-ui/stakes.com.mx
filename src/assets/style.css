@@ -349,6 +349,16 @@ a.card:hover { transform: translateY(-3px); background: var(--bg-3); }
 .hero-art img { width: 100%; max-width: 400px; height: auto; transform: scale(1.25); -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 52%, transparent 71%); mask-image: radial-gradient(circle at 50% 50%, #000 52%, transparent 71%); }
 .hero-phone .phone-frame { width: 230px; transform: rotate(4deg); }
 .hero-phone img { -webkit-mask-image: none; mask-image: none; max-width: none; }
+/* Скриншот Stake в первом экране */
+.hero-grid.has-shot { grid-template-columns: 1.1fr 1fr; gap: 40px; }
+.hero-shot { position: relative; margin: 0; padding: 22px 6px 30px 0; perspective: 1400px; }
+.shot-frame { border-radius: var(--r-lg); overflow: hidden; border: 1px solid rgba(255,255,255,.08); background: var(--bg-0); box-shadow: 0 24px 48px rgba(0,0,0,.45), 0 0 0 6px rgba(20,117,225,.10); transform: rotateY(-12deg) rotateX(4deg) rotate(1deg); transform-origin: 60% 50%; }
+.shot-frame img { display: block; width: 100%; height: auto; }
+.shot-phone { position: absolute; left: -14px; bottom: 4px; width: 22%; border-radius: 14px; overflow: hidden; border: 3px solid #0b1620; box-shadow: 0 16px 32px rgba(0,0,0,.5); transform: rotate(-6deg); }
+.shot-phone img { display: block; width: 100%; height: auto; }
+.shot-tag { position: absolute; top: 0; right: 0; background: var(--blue); color: #fff; font-weight: 800; font-size: 1.1rem; padding: 10px 20px; border-radius: var(--r); box-shadow: 0 10px 24px rgba(20,117,225,.35); transform: rotate(4deg); white-space: nowrap; }
+@media (max-width: 1100px) { .hero-grid.has-shot { grid-template-columns: 1.3fr 1fr; gap: 28px; } }
+@media (max-width: 860px) { .hero .hero-shot { display: none; } .hero-grid.has-shot { grid-template-columns: 1fr; } }
 @media (max-width: 860px) { .hero .hero-art { display: none; } }
 
 /* Иконки у заголовков разделов и в карточках */
