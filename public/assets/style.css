@@ -50,7 +50,8 @@ strong, b { color: var(--text); font-weight: 700; }
 
 /* Логотип */
 .logo { display: inline-flex; align-items: center; gap: 8px; color: #fff; text-decoration: none; font-weight: 800; font-size: 1.2rem; white-space: nowrap; }
-.logo-mark { width: 30px; height: 30px; border-radius: var(--r); background: var(--blue); display: grid; place-items: center; font-size: 1rem; box-shadow: var(--shadow); }
+.logo-mark { width: 32px; height: 32px; flex: none; border-radius: var(--r); background: var(--bg-0); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), var(--shadow); overflow: hidden; }
+.logo-mark svg { display: block; width: 100%; height: 100%; }
 .logo .logo-tld { color: var(--text-3); font-weight: 700; font-size: .8em; }
 
 /* Сайдбар */

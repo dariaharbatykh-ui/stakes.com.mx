@@ -518,8 +518,11 @@ def links(items):
     return "".join(f'<li><a href="{h}">{t}</a></li>' for h, t in items)
 
 
+# Знак логотипа — та же рукописная «S», что в фавиконе (контур берём из src/assets/favicon.svg)
+LOGO_S = re.search(r'<path fill="#fff" d="([^"]+)"', (SRC / "assets" / "favicon.svg").read_text(encoding="utf-8")).group(1)
 LOGO = (f'<a class="logo" href="/" aria-label="{SITE_NAME} inicio">'
-        f'<span class="logo-mark" aria-hidden="true">S</span><span class="logo-txt">Stakes<span class="logo-tld">.com.mx</span></span></a>')
+        f'<span class="logo-mark" aria-hidden="true"><svg viewBox="0 0 64 64" focusable="false"><path fill="#fff" d="{LOGO_S}"/></svg></span>'
+        f'<span class="logo-txt">Stakes<span class="logo-tld">.com.mx</span></span></a>')
 
 
 def side_section(title, items, current):
