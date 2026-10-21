@@ -33,17 +33,21 @@ npm run dev
 - `html_handling = "auto-trailing-slash"` — `/registro` → `/registro/`;
 - `public/_headers` (создаёт `build.py`) — кэш на год для `/assets/*` (у CSS/JS в ссылке `?v=хэш`, поэтому правки подхватываются сразу) и заголовки безопасности.
 
-Первый деплой:
+Аккаунт Cloudflare этого сайта: uzivggfem-977@get-emailxyz.eu (account ID 9e4a4001a16e0739b5680770f83dd7dc). Вход Wrangler для проекта хранится отдельно, в `.wrangler-home/` (не в git), поэтому не мешает другим проектам на этом компьютере.
+
+Вход (один раз, в браузере откроется страница Cloudflare):
 
 ```bash
-npx wrangler login
+npm run login
 ```
+
+Деплой:
 
 ```bash
 npm run deploy
 ```
 
-После деплоя сайт доступен на `https://stakes-com-mx.<аккаунт>.workers.dev`. Чтобы подключить домен, добавьте зону stakes.com.mx в Cloudflare и раскомментируйте `routes` в `wrangler.toml`: только `stakes.com.mx/*` и `www.stakes.com.mx/*`. Поддомен `scm.stakes.com.mx` (партнёрские ссылки) в маршруты не добавлять.
+Сайт: https://stakes-com-mx.stakesmx.workers.dev (поддомен workers.dev — `stakesmx`; закрыт от индексации заголовком `X-Robots-Tag: noindex`). Чтобы подключить домен, добавьте зону stakes.com.mx в Cloudflare и раскомментируйте `routes` в `wrangler.toml`: только `stakes.com.mx/*` и `www.stakes.com.mx/*`. Поддомен `scm.stakes.com.mx` (партнёрские ссылки) в маршруты не добавлять.
 
 ## Шорткоды в контенте
 

@@ -5,7 +5,9 @@
   "scripts": {
     "build": "python3 build.py",
     "dev": "python3 build.py && node serve.mjs 8080",
-    "preview": "python3 build.py && npx wrangler dev",
-    "deploy": "python3 build.py && npx wrangler deploy"
+    "login": "XDG_CONFIG_HOME=\"$PWD/.wrangler-home\" npx wrangler login",
+    "whoami": "XDG_CONFIG_HOME=\"$PWD/.wrangler-home\" npx wrangler whoami",
+    "preview": "python3 build.py && XDG_CONFIG_HOME=\"$PWD/.wrangler-home\" npx wrangler dev",
+    "deploy": "python3 build.py && XDG_CONFIG_HOME=\"$PWD/.wrangler-home\" npx wrangler deploy"
   }
 }
