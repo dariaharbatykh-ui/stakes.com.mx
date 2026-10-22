@@ -2,6 +2,8 @@
 # Деплой:  npm run deploy   (= python3 build.py && npx wrangler deploy)
 # Первый раз: npx wrangler login
 name = "stakes-com-mx"
+# Cloudflare account of this project (uzivggfem-977@get-emailxyz.eu): deploys can only go here
+account_id = "9e4a4001a16e0739b5680770f83dd7dc"
 compatibility_date = "2026-10-01"
 
 # Адрес для проверки до подключения домена: https://stakes-com-mx.<аккаунт>.workers.dev
