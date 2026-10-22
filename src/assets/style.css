@@ -415,6 +415,10 @@ a.card:hover { transform: translateY(-3px); background: var(--bg-3); }
   .top-actions .btn-sm { min-height: 44px; padding: 10px 14px; }
   .crumbs a { display: inline-block; padding: 12px 0; }
   .crumbs { margin-bottom: 4px; }
+  .btn { min-height: 44px; }
+  .tabs a { display: flex; align-items: center; min-height: 44px; }
+  .social a { width: 44px; height: 44px; }
+  .skip:focus { display: inline-flex; align-items: center; min-height: 44px; }
   .hero { padding-top: 12px; }
   /* Кнопки первого экрана — во всю ширину */
   .hero-actions { display: grid; grid-template-columns: 1fr; }
