@@ -292,6 +292,15 @@ def jpeg_size(path):
     return 800, 496
 
 
+MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+
+
+def es_date(iso):
+    # «2026-10-22» → «22 de octubre de 2026»
+    y, m, d = (int(x) for x in iso.split("-"))
+    return f"{d} de {MESES[m - 1]} de {y}"
+
+
 def lead_html(s):
     # В лиде первого экрана допускается только внутренняя ссылка <a href="/...">, остальное экранируется
     tag = re.compile(r'(<a href="/[^"<>]*">|</a>)')
@@ -729,10 +738,10 @@ def _page_html(slug, meta, body):
     mod_iso = meta.get("modified", UPDATED_ISO)
     meta_line = ""
     if kind != "legal":
-        meta_line = (f'<div class="meta-line updated"><span>Actualizado: <time datetime="{mod_iso}">{UPDATED_TXT}</time></span>'
+        meta_line = (f'<div class="meta-line updated"><span>Actualizado: <time datetime="{mod_iso}">{es_date(mod_iso)}</time></span>'
                      f'</div>')
     else:
-        meta_line = f'<div class="meta-line updated"><span>Última actualización: <time datetime="{mod_iso}">{UPDATED_TXT}</time></span></div>'
+        meta_line = f'<div class="meta-line updated"><span>Última actualización: <time datetime="{mod_iso}">{es_date(mod_iso)}</time></span></div>'
 
     lead = f'<p class="lead">{lead_html(meta["lead"])}</p>' if meta.get("lead") else ""
     # Первый экран — вводная часть всей страницы (h1, лид, кнопки), поэтому <header> внутри <main>, а не <section>
