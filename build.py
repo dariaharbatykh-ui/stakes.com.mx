@@ -628,6 +628,16 @@ def page_html(slug, meta, body):
     return "\n".join(line.rstrip() for line in doc.split("\n")) + "\n"
 
 
+# Google Tag Manager (код от владельца сайта, вставлен как есть)
+GTM_ID = "GTM-TGKWL5L8"
+GTM_HEAD = """<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-TGKWL5L8');</script>
+<!-- End Google Tag Manager -->"""
+GTM_BODY = """<!-- Google Tag Manager (noscript) -->
+<noscript><!-- [html-validate-disable-next no-inline-style -- стиль из кода GTM] --><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TGKWL5L8" title="Google Tag Manager" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->"""
+
+
 def _page_html(slug, meta, body):
     url = url_of(slug)
     canonical = SITE + url
@@ -759,6 +769,7 @@ def _page_html(slug, meta, body):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+{GTM_HEAD}
 <title>{esc(meta["title"])}</title>
 <meta name="description" content="{esc(meta["description"])}">
 <meta name="robots" content="{robots}">
@@ -784,6 +795,7 @@ def _page_html(slug, meta, body):
 <script type="application/ld+json">{ld}</script>
 </head>
 <body>
+{GTM_BODY}
 <a class="skip" href="#main">Saltar al contenido</a>
 {sidebar(url)}
 <div class="shell">
