@@ -5,7 +5,7 @@
   "scripts": {
     "build": "python3 build.py",
     "dev": "python3 build.py && node serve.mjs 8080",
-    "login": "sh scripts/cf.sh login",
+    "login": "sh scripts/cf.sh login --callback-host 127.0.0.1",
     "whoami": "sh scripts/cf.sh whoami",
     "preview": "python3 build.py && sh scripts/cf.sh dev",
     "deploy": "python3 build.py && sh scripts/cf.sh deploy",
